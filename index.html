@@ -752,6 +752,23 @@ body[data-screen=island] #caption{top:auto;bottom:calc(env(safe-area-inset-botto
 .tenf i.f{background:var(--blue,#2E95F0);border-color:var(--blue,#2E95F0)}
 .grid.fit .card .tenf{width:58%}
 .shSides{display:block;font-size:13px;font-weight:700;color:var(--ink2,#5B5470);margin-top:2px;letter-spacing:.02em}
+/* story time: grounded actors, drawn props, end-of-story question */
+.stActor{filter:none}
+.stActor.gnd::before{content:'';position:absolute;left:12%;right:12%;bottom:-6%;height:14%;border-radius:50%;background:radial-gradient(closest-side,rgba(30,30,40,.28),rgba(30,30,40,0));z-index:-1;pointer-events:none}
+.stActor:not(.gnd) .inner{filter:drop-shadow(0 8px 6px rgba(0,0,0,.14))}
+.stActor.prop .inner{width:calc(var(--sz) * 1.5vh)}.stActor.prop svg{display:block;width:100%;height:auto}
+.stActor.prop .inner{transform-origin:20% 98%}
+.stQuiz{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;background:rgba(255,250,240,.94);text-align:center;animation:tmFade .3s ease-out}
+.stQuiz small{font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2,#5B5470);font-size:12px}
+.stQuiz>b{font-family:var(--display);font-size:clamp(20px,3.2vw,32px);line-height:1.15;max-width:22ch}
+.stQo{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.stQb{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:120px;max-width:200px;padding:12px 14px;background:#fff;border:var(--bw,3px) solid var(--line,#2B2340);border-radius:18px;box-shadow:var(--hard,0 4px 0 #2B2340);font:700 15px/1.2 var(--body,system-ui);color:var(--ink,#2B2340)}
+.stQb .emo{font-size:38px;line-height:1}
+.stQb.no{opacity:.4;transform:translateY(3px);box-shadow:none}
+.stQb.yes{background:#E3F8E8;border-color:var(--green,#35C46A);box-shadow:0 4px 0 var(--green,#35C46A)}
+.stWord{display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;border:2px dashed var(--line,#2B2340);border-radius:18px;padding:10px 18px;max-width:420px}
+.stWord i{font-style:normal;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#C2185B}
+.stWord b{font-family:var(--display);font-size:28px}.stWord span{font-size:15px}.stWord .toy{margin-top:6px;height:48px;padding:0 18px;border-radius:16px;font-family:var(--display);font-size:18px}
 
 /* Wonder World — storybook theme: warm paper, ink outlines, solid toy shadows. Loaded last; it restyles the shell
    (bar, home, worlds, game cards, shared prompts and pop-ups) so every screen speaks one visual language. */
@@ -3575,7 +3592,7 @@ class Scene {
     if (this.type === 'space') { this.drawShootingStar(g, t, w, h); this.drawEmojiFloat(g, t, '🚀', w * .3 + Math.sin(t * .3) * w * .1, h * .25 + Math.cos(t * .4) * 20, 60, Math.sin(t * .3) * .2); this.drawEmojiFloat(g, t, '🛸', w * .62 + Math.cos(t * .25) * w * .15, h * .6 + Math.sin(t * .5) * 30, 50, 0); return; }
     if (this.type === 'night') this.drawShootingStar(g, t, w, h);
     // sun rays
-    if (this.sun && this.type !== 'night') { g.save(); g.globalCompositeOperation = 'lighter'; g.translate(this.sun.x, this.sun.y); g.rotate(t * .05); for (let i = 0; i < 12; i++) { g.rotate(TAU / 12); g.fillStyle = 'rgba(255,245,200,.06)'; g.beginPath(); g.moveTo(0, 0); g.lineTo(this.sun.r * 6, -this.sun.r * .5); g.lineTo(this.sun.r * 6, this.sun.r * .5); g.fill(); } g.restore(); }
+    if (false && this.sun) { g.save(); g.globalCompositeOperation = "lighter"; g.translate(this.sun.x, this.sun.y); g.rotate(t * .05); for (let i = 0; i < 12; i++) { g.rotate(TAU / 12); g.fillStyle = 'rgba(255,245,200,.06)'; g.beginPath(); g.moveTo(0, 0); g.lineTo(this.sun.r * 6, -this.sun.r * .5); g.lineTo(this.sun.r * 6, this.sun.r * .5); g.fill(); } g.restore(); }
     // volcano smoke
     if (this.volcano) for (const s of this.particles) if (s.smoke) { s.t += dt * s.s; if (s.t > 6) s.t = 0; const k = s.t / 6; g.fillStyle = `rgba(120,90,80,${.35 * (1 - k)})`; g.beginPath(); g.arc(this.volcano.x + Math.sin(s.t * 2) * 12 + k * 40, this.volcano.y - k * h * .25, 10 + k * 40, 0, TAU); g.fill(); }
     // clouds
@@ -7116,12 +7133,12 @@ add('goodnight', '🌙', ['Goodnight, Farm', 'Buenas noches, granja'], '#3B3F8F'
   { bg: 'night', a: ['🌙 50,20 22 bob', '⭐ 20,20 6 spin', '⭐ 80,30 6 spin 0.4'], fx: 'stars', t: ['Goodnight, Moon. Goodnight, stars. Goodnight, you. The end.', 'Buenas noches, Luna. Buenas noches, estrellas. Buenas noches a ti. Fin.'] }]);
 add('pigs', '🐷', ['The Three Little Pigs', 'Los tres cerditos'], '#FF6FB1', [
   { bg: 'farm', a: ['🐷 30,78 16 hop', '🐷 50,80 16 hop 0.2', '🐷 70,78 16 hop 0.4'], t: ['Three little pigs set off to build their own houses.', 'Tres cerditos salieron a construir sus propias casas.'] },
-  { bg: 'farm', a: ['🌾 50,70 30 grow', '🐷 26,80 14 bob'], t: ['The first pig built a house of straw. Quick and easy!', 'El primer cerdito hizo una casa de paja. ¡Rápido y fácil!'] },
-  { bg: 'forest', a: ['🪵 50,70 30 grow', '🐷 26,80 14 bob'], t: ['The second pig built a house of sticks.', 'El segundo cerdito hizo una casa de palitos.'] },
-  { bg: 'meadow', a: ['🧱 50,68 34 grow', '🐷 24,80 14 bob'], t: ['The third pig worked hard and built a strong house of bricks.', 'El tercer cerdito trabajó mucho e hizo una casa fuerte de ladrillos.'] },
-  { bg: 'forest', a: ['🐺 20,74 26 >40,74 walk', '🌾 70,70 24 shake'], fx: 'wind', t: ['Along came the wolf. He huffed and he puffed and blew the straw house down!', 'Llegó el lobo. ¡Sopló y sopló y derribó la casa de paja!'], tap: [0, ['Tap the wolf to make him huff and puff!', '¡Toca al lobo para que sople!']] },
-  { bg: 'forest', a: ['🐺 20,74 26 shake', '🪵 70,70 24 spin'], fx: 'wind', t: ['He huffed and puffed at the stick house. Down it came! The pigs ran to their brother.', 'Sopló y sopló la casa de palitos. ¡Se cayó! Los cerditos corrieron con su hermano.'] },
-  { bg: 'meadow', a: ['🧱 60,66 36', '🐺 20,74 26 shake', '🐷 60,64 10 bob'], t: ['The wolf huffed and puffed and puffed, but the brick house stood strong!', 'El lobo sopló y sopló y sopló, ¡pero la casa de ladrillos no se cayó!'] },
+  { bg: 'farm', a: ['prop:straw 54,66 30 grow', '🐷 26,80 14 bob'], t: ['The first pig built a house of straw. Quick and easy!', 'El primer cerdito hizo una casa de paja. ¡Rápido y fácil!'] },
+  { bg: 'forest', a: ['prop:sticks 54,66 30 grow', '🐷 26,80 14 bob'], t: ['The second pig built a house of sticks.', 'El segundo cerdito hizo una casa de palitos.'] },
+  { bg: 'meadow', a: ['prop:bricks 54,64 34 grow', '🐷 24,80 14 bob'], t: ['The third pig worked hard and built a strong house of bricks.', 'El tercer cerdito trabajó mucho e hizo una casa fuerte de ladrillos.'] },
+  { bg: 'forest', a: ['🐺 20,74 26 >40,74 walk', 'prop:straw 70,68 24 fall 1.6'], fx: 'wind', t: ['Along came the wolf. He huffed and he puffed and blew the straw house down!', 'Llegó el lobo. ¡Sopló y sopló y derribó la casa de paja!'], tap: [0, ['Tap the wolf to make him huff and puff!', '¡Toca al lobo para que sople!']] },
+  { bg: 'forest', a: ['🐺 20,74 26 shake', 'prop:sticks 70,68 24 fall 1.4'], fx: 'wind', t: ['He huffed and puffed at the stick house. Down it came! The pigs ran to their brother.', 'Sopló y sopló la casa de palitos. ¡Se cayó! Los cerditos corrieron con su hermano.'] },
+  { bg: 'meadow', a: ['prop:bricks 62,64 34', '🐺 20,74 26 shake', '🐷 60,64 10 bob'], t: ['The wolf huffed and puffed and puffed, but the brick house stood strong!', 'El lobo sopló y sopló y sopló, ¡pero la casa de ladrillos no se cayó!'] },
   { bg: 'rainbow', a: ['🐷 30,76 16 hop', '🐷 50,78 16 hop 0.2', '🐷 70,76 16 hop 0.4', '🐺 110,74 18 >140,74 walk'], fx: 'confetti', t: ['The tired wolf ran away. Hard work keeps us safe. The end.', 'El lobo cansado se fue corriendo. El trabajo bien hecho nos protege. Fin.'] }]);
 add('harerace', '🐇', ['The Tortoise and the Hare', 'La liebre y la tortuga'], '#FFC93C', [
   { bg: 'meadow', a: ['🐇 30,76 18 hop', '🐢 64,80 14 bob'], t: ['Hare laughed at Tortoise. You are so slow! Let\'s have a race!', 'La liebre se reía de la tortuga. ¡Eres muy lenta! ¡Hagamos una carrera!'] },
@@ -7194,31 +7211,51 @@ const CSSBG = { bath: 'linear-gradient(#DDF4FF 0 62%,#BFE3F5 62%)', kitchen: 'li
 let scene = null;
 function textOf(page, idx) { const s = P.s; if (s.rec) return [L => L.stories[s.rec][1][idx]]; return page.t; }
 function pageText(page, idx) { const s = P.s; if (s.rec) { const H = W.H(), S2 = W.sec(); return [H.stories[s.rec][1][idx], S2 && S2.stories[s.rec] ? S2.stories[s.rec][1][idx] : '']; } if (W.home() === 'es') return [page.t[1], '']; const a = W.tr(page.t[0], page.t[1]), b = W.trS2(page.t[0], page.t[1]); return [a, W.sec() === W.I18N.es ? page.t[1] : b && b !== a ? b : '']; }
-function parseActor(str) { const p = str.split(' '), e = p[0], [x, y] = p[1].split(',').map(Number), size = +p[2]; let to = null, anim = null; const nums = [];
+const BODY = { '🐷': '🐖', '🐮': '🐄', '🐭': '🐁', '🐰': '🐇', '🐶': '🐕', '🐱': '🐈', '🐯': '🐅', '🐵': '🐒', '🐴': '🐎' };
+function parseActor(str) { const p = str.split(' '), e = BODY[p[0]] || p[0], [x, y] = p[1].split(',').map(Number), size = +p[2]; let to = null, anim = null; const nums = [];
   for (const tk of p.slice(3)) { if (tk.startsWith('>')) to = tk.slice(1).split(',').map(Number); else if (isNaN(+tk)) anim = tk; else nums.push(+tk); }
   return { e, x, y, size, to, anim, delay: nums[0] || 0, dur: nums[1] || null }; }
-const ANIM = { walk: [{ transform: 'translateY(0) rotate(-4deg)' }, { transform: 'translateY(-8%) rotate(4deg)' }, { transform: 'translateY(0) rotate(-4deg)' }], hop: [{ transform: 'translateY(0) scale(1,1)' }, { transform: 'translateY(-30%) scale(.95,1.05)' }, { transform: 'translateY(0) scale(1.08,.9)' }, { transform: 'translateY(0) scale(1,1)' }],
+const ANIM = { walk: [{ transform: 'translateY(0) rotate(-3deg) scale(1.03,.97)' }, { transform: 'translateY(-6%) rotate(0) scale(.98,1.02)' }, { transform: 'translateY(0) rotate(3deg) scale(1.03,.97)' }, { transform: 'translateY(-6%) rotate(0) scale(.98,1.02)' }, { transform: 'translateY(0) rotate(-3deg) scale(1.03,.97)' }],
+  hop: [{ transform: 'translateY(0) scale(1,1)' }, { transform: 'translateY(0) scale(1.1,.88)', offset: .15 }, { transform: 'translateY(-30%) scale(.94,1.08)', offset: .45 }, { transform: 'translateY(0) scale(1.1,.9)', offset: .75 }, { transform: 'translateY(0) scale(1,1)' }],
+  breathe: [{ transform: 'scale(1,1)' }, { transform: 'scale(1.012,1.03)' }, { transform: 'scale(1,1)' }],
   fly: [{ transform: 'translateY(0) rotate(-6deg)' }, { transform: 'translateY(-14%) rotate(6deg)' }, { transform: 'translateY(0) rotate(-6deg)' }], bob: [{ transform: 'translateY(0)' }, { transform: 'translateY(-5%)' }, { transform: 'translateY(0)' }], float: [{ transform: 'translateY(0)' }, { transform: 'translateY(-18%)' }, { transform: 'translateY(0)' }],
   spin: [{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }], shake: [{ transform: 'translateX(0)' }, { transform: 'translateX(-5%) rotate(-4deg)' }, { transform: 'translateX(5%) rotate(4deg)' }, { transform: 'translateX(0)' }], swim: [{ transform: 'translateY(0) rotate(-5deg)' }, { transform: 'translateY(-8%) rotate(5deg)' }, { transform: 'translateY(0) rotate(-5deg)' }],
   wiggle: [{ transform: 'rotate(-8deg)' }, { transform: 'rotate(8deg)' }, { transform: 'rotate(-8deg)' }], sleep: [{ transform: 'scale(1,1)' }, { transform: 'scale(1.04,.96)' }, { transform: 'scale(1,1)' }], grow: [{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], pop: [{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }] };
-const ANIM_MS = { walk: 520, hop: 700, fly: 900, bob: 2200, float: 2600, spin: 5000, shake: 500, swim: 1400, wiggle: 700, sleep: 2600, grow: 2400, pop: 2000 };
+const ANIM_MS = { breathe: 3200, walk: 900, hop: 700, fly: 900, bob: 2200, float: 2600, spin: 5000, shake: 500, swim: 1400, wiggle: 700, sleep: 2600, grow: 2400, pop: 2000 };
 function fxLayer(kind) { if (!kind) return ''; const set = { rain: ['💧', 'fall', 26], snow: ['❄️', 'fall', 30], stars: ['✨', 'twinkle', 24], hearts: ['💖', 'rise', 16], sparkle: ['✨', 'twinkle', 18], bubbles: ['🫧', 'rise', 20], confetti: ['🎉', 'fall', 22], wind: ['🍃', 'blow', 18] }[kind]; if (!set) return '';
   let h = ''; for (let i = 0; i < set[2]; i++) h += `<span class="sfx ${set[1]} emo" style="left:${Math.random() * 100}%;top:${set[1] === 'fall' ? -10 : set[1] === 'rise' ? 100 : Math.random() * 90}%;animation-delay:${-Math.random() * 4}s;animation-duration:${2.5 + Math.random() * 3}s;font-size:${14 + Math.random() * 18}px">${kind === 'confetti' ? rnd(['🎉', '⭐', '🎈', '💖', '🌟']) : set[0]}</span>`; return h; }
-function actorHTML(a, i) { const isDino = a.e.startsWith('dino:'), d = isDino && W.DINOS ? W.DINOS.find(x => x.id === a.e.slice(5)) : null;
+const brick = (x, y, w, h) => { let r = ''; for (let yy = y, row = 0; yy < y + h; yy += 9, row++) for (let xx = x - (row % 2) * 8; xx < x + w; xx += 16) r += `<rect x="${Math.max(x, xx) + 1}" y="${yy + 1}" width="${Math.min(14, x + w - Math.max(x, xx) - 1)}" height="7" rx="1" fill="#C8573E"/>`; return r; };
+const PROPS = {
+  straw: '<path d="M14 58H106V108H14Z" fill="#EBC873"/>' + Array.from({ length: 14 }, (_, i) => `<path d="M${18 + i * 6.4} 60V106" stroke="#C99A3E" stroke-width="1.6"/>`).join('') + '<path d="M2 62L60 10L118 62Z" fill="#D9A84A"/>' + Array.from({ length: 12 }, (_, i) => `<path d="M60 12L${6 + i * 10} 62" stroke="#B88830" stroke-width="1.4"/>`).join('') + '<path d="M50 108V80Q60 70 70 80V108Z" fill="#7A5226"/>',
+  sticks: '<path d="M14 58H106V108H14Z" fill="#B7834F"/>' + Array.from({ length: 10 }, (_, i) => `<path d="M${19 + i * 9.4} 56L${17 + i * 9.4} 108" stroke="#7E5531" stroke-width="3" stroke-linecap="round"/>`).join('') + '<path d="M10 70H110M10 92H110" stroke="#6B4629" stroke-width="3"/><path d="M4 62L60 14L116 62" fill="#9A6A3E" stroke="#6B4629" stroke-width="4" stroke-linejoin="round"/><path d="M50 108V82H70V108Z" fill="#5A3A1E"/>',
+  bricks: '<path d="M84 18H98V48H84Z" fill="#9E3F2E"/><path d="M14 56H106V108H14Z" fill="#E9D6C4"/>' + brick(14, 56, 92, 52) + '<path d="M4 60L60 12L116 60Z" fill="#6B3A2E"/><path d="M48 108V80Q60 70 72 80V108Z" fill="#5A3A1E"/><rect x="24" y="68" width="18" height="16" rx="2" fill="#FFE28A" stroke="#5A3A1E" stroke-width="3"/><rect x="78" y="68" width="18" height="16" rx="2" fill="#FFE28A" stroke="#5A3A1E" stroke-width="3"/>'
+};
+function actorHTML(a, i) { if (a.e.startsWith('prop:')) return `<button class="stActor prop gnd" data-i="${i}" style="left:${a.x}%;top:${a.y}%;--sz:${a.size}"><span class="inner"><svg viewBox="0 0 120 110">${PROPS[a.e.slice(5)] || ''}</svg></span></button>`; const isDino = a.e.startsWith('dino:'), d = isDino && W.DINOS ? W.DINOS.find(x => x.id === a.e.slice(5)) : null;
   const inner = d ? W.dinoSVG(d) : `<span class="emo">${a.e}</span>`;
-  return `<button class="stActor ${d ? 'dino' : ''}" data-i="${i}" style="left:${a.x}%;top:${a.y}%;--sz:${a.size}"><span class="inner">${inner}</span></button>`; }
+  const gnd = a.y >= 52 && !/fly|float|swim|spin/.test(a.anim || '') && !/reef|space/.test(P.bg || '');
+  return `<button class="stActor ${d ? 'dino' : ''} ${gnd ? 'gnd' : ''}" data-i="${i}" style="left:${a.x}%;top:${a.y}%;--sz:${a.size}"><span class="inner">${inner}</span></button>`; }
 function show(i, dir = 1) {
-  const s = P.s, pg = s.pages[i], run = ++P.run; P.i = i; P.waiting = null; W.stopVoice();
+  const s = P.s, pg = s.pages[i], run = ++P.run; P.i = i; P.onTap = null; P.waiting = null; W.stopVoice();
   const st = $('#stStage'); if (!st) return;
+  const bgChanged = P.bg !== pg.bg; P.bg = pg.bg;
   if (pg.bg.startsWith('css:')) { if (scene) scene.stop(); $('#stScene').style.display = 'none'; st.style.background = CSSBG[pg.bg.slice(4)]; } else { st.style.background = ''; $('#stScene').style.display = ''; if (!scene) scene = new W.Scene($('#stScene'), pg.bg); scene.setType(pg.bg); scene.start(); }
   const actors = pg.a.map(parseActor), cam = $('#stCam');
   cam.innerHTML = actors.map(actorHTML).join('') + `<div class="stFx">${fxLayer(pg.fx)}</div>`;
   cam.getAnimations().forEach(a => a.cancel()); cam.animate([{ transform: `scale(1) translate(${dir * 1.5}%,0)` }, { transform: `scale(1.07) translate(${-dir * 1.5}%,-1%)` }], { duration: 14000, easing: 'ease-in-out', fill: 'forwards' });
-  st.animate([{ opacity: .2, filter: 'blur(6px)' }, { opacity: 1, filter: 'none' }], { duration: 500 });
+  if (bgChanged) $('#stScene').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 650, easing: 'ease-out' });
+  const prev = (P.prevActors || []).slice(); P.prevActors = actors.map(a => ({ e: a.e, x: a.to ? a.to[0] : a.x, y: a.to ? a.to[1] : a.y }));
   $$('.stActor', cam).forEach((el, k) => { const a = actors[k], dly = (a.delay || 0) * 1000;
-    el.animate([{ transform: 'translate(-50%,-50%) scale(0)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(1.12)', opacity: 1, offset: .7 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }], { duration: 600, delay: dly, easing: 'cubic-bezier(.3,1.5,.5,1)', fill: 'backwards' });
-    if (a.to) el.animate([{ left: a.x + '%', top: a.y + '%' }, { left: a.to[0] + '%', top: a.to[1] + '%' }], { duration: (a.dur || 3) * 1000, delay: dly + 300, easing: 'ease-in-out', fill: 'forwards' });
-    if (a.anim && ANIM[a.anim]) { el.firstElementChild.animate(ANIM[a.anim], { duration: ANIM_MS[a.anim], iterations: Infinity, delay: dly, easing: 'ease-in-out' }); if (a.to && (a.to[0] < a.x)) el.firstElementChild.style.scale = '-1 1'; if (a.anim === 'sleep') el.classList.add('zz'); } });
+    const m = bgChanged ? -1 : prev.findIndex(p => p.e === a.e), from = m >= 0 ? prev.splice(m, 1)[0] : null; let lead = 300;
+    if (from && (from.x !== a.x || from.y !== a.y)) { el.animate([{ left: from.x + '%', top: from.y + '%' }, { left: a.x + '%', top: a.y + '%' }], { duration: 700, easing: 'ease-in-out', fill: 'backwards' }); lead = 750; }
+    else if (!from) { if (a.anim === 'pop' || a.anim === 'grow') el.animate([{ transform: 'translate(-50%,-50%) scale(0)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(1.08)', opacity: 1, offset: .7 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }], { duration: 650, delay: dly, easing: 'cubic-bezier(.3,1.4,.5,1)', fill: 'backwards' });
+      else el.animate([{ transform: 'translate(-50%,-38%)', opacity: 0 }, { transform: 'translate(-50%,-50%)', opacity: 1 }], { duration: 550, delay: (a.anim === 'fall' ? 0 : dly) + k * 90, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' }); }
+    if (a.to) el.animate([{ left: a.x + '%', top: a.y + '%' }, { left: a.to[0] + '%', top: a.to[1] + '%' }], { duration: (a.dur || 3) * 1000, delay: dly + lead, easing: 'ease-in-out', fill: 'forwards' });
+    const mover = /walk|hop|fly|swim/.test(a.anim || ''), isDino = a.e.startsWith('dino:');
+    // emoji animals face left, dinosaur drawings face right: turn each one toward where it is going
+    if (a.to && mover && ((a.to[0] > a.x) !== isDino)) el.firstElementChild.style.scale = '-1 1';
+    if (a.anim === 'fall') { const tip = () => el.isConnected && el.firstElementChild.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)', offset: .25 }, { transform: 'rotate(4deg)', offset: .45 }, { transform: 'rotate(84deg) translateY(10%)', opacity: .9 }], { duration: 1300, delay: pg.tap ? 150 : dly + 400, easing: 'cubic-bezier(.5,0,.8,.4)', fill: 'forwards' }); if (pg.tap) P.onTap = tip; else tip(); return; }
+    const an = a.anim && ANIM[a.anim] ? a.anim : 'breathe';
+    el.firstElementChild.animate(ANIM[an], { duration: ANIM_MS[an] * (an === 'breathe' ? .85 + Math.random() * .3 : 1), iterations: Infinity, delay: dly, easing: 'ease-in-out' }); if (a.anim === 'sleep') el.classList.add('zz'); });
   // text with word highlights
   const [t1, t2] = pageText(pg, i); let pos = 0;
   $('#stText').innerHTML = t1.split(/(\s+)/).map(w => { const c = pos; pos += w.length; return /\s/.test(w) ? w : `<span class="w" data-c="${c}">${esc(w)}</span>`; }).join('') + (t2 ? `<span class="l2">${esc(t2)}</span>` : '');
@@ -7236,11 +7273,42 @@ function show(i, dir = 1) {
     if (P.waiting && P.waiting.k === k) { const w = P.waiting; P.waiting = null; b.classList.remove('hintPulse'); w.res(); } };
 }
 function askTap(pg, run) { const [k, line] = pg.tap, el = $$('#stCam .stActor')[k]; if (!el) return; el.classList.add('hintPulse'); $('#stHelp').textContent = T(line[0], line[1]); $('#stHelp').hidden = false; W.say2(line[0], line[1], { force: true });
-  new Promise(res => P.waiting = { k, res }).then(() => { $('#stHelp').hidden = true; W.sfx.chime(); W.award('reading', 1, 'stories'); setTimeout(() => { if (run === P.run && W.cur === 'story') { if (pg.choice) askChoice(pg, run); else next(); } }, 1100); }); }
+  new Promise(res => P.waiting = { k, res }).then(() => { $('#stHelp').hidden = true; if (P.onTap) { P.onTap(); P.onTap = null; W.sfx.whoosh && W.sfx.whoosh(); } W.sfx.chime(); W.award('reading', 1, 'stories'); setTimeout(() => { if (run === P.run && W.cur === 'story') { if (pg.choice) askChoice(pg, run); else next(); } }, 1100); }); }
 function askChoice(pg, run) { const box = $('#stChoice'); box.hidden = false; box.innerHTML = pg.choice.map(([e, lab, go]) => `<button class="toy stCh" style="--c:var(--purple)" data-go="${go}"><span class="emo">${e}</span>${esc(T(lab[0], lab[1]))}</button>`).join('');
   box.onclick = ev => { const b = ev.target.closest('[data-go]'); if (!b) return; box.hidden = true; W.sfx.chime(); W.award('thinking', 1, 'stories'); show(+b.dataset.go); }; }
 function next() { const s = P.s, pg = s.pages[P.i]; if (pg.next != null) return show(pg.next); if (P.i < s.pages.length - 1) return show(P.i + 1); finish(); }
-function finish() { W.confetti(); W.sfx.chime(); W.award('reading', 3, 'stories'); W.collect('story', P.s.id);
+const QUIZ = {
+  seed: { q: ['What did the little seed need to grow?', '¿Qué necesitó la semillita para crecer?'], o: [['☀️', ['Sun and rain', 'Sol y lluvia']], ['🍬', ['Candy', 'Dulces']], ['📺', ['A TV', 'Una tele']]], w: ['sprout', 'brotar', 'When a seed starts to grow, it sprouts.', 'Cuando una semilla empieza a crecer, brota.'] },
+  turtle: { q: ['How did the turtle reach the top?', '¿Cómo llegó la tortuga a la cima?'], o: [['🐢', ['She kept trying', 'Siguió intentándolo']], ['🪽', ['She flew', 'Voló']], ['😴', ['She gave up', 'Se rindió']]], w: ['brave', 'valiente', 'Brave means you try even when it feels hard.', 'Valiente es intentarlo aunque sea difícil.'] },
+  share: { q: ['What did Bear and Bunny do with the teddy?', '¿Qué hicieron Oso y Conejo con el osito?'], o: [['🔄', ['Took turns', 'Se turnaron']], ['🗑️', ['Threw it away', 'Lo tiraron']], ['🙈', ['Hid it', 'Lo escondieron']]], w: ['share', 'compartir', 'To share is to let someone else use something too.', 'Compartir es dejar que otra persona también use algo.'] },
+  robot: { q: ['What does Robo do when he wonders about something?', '¿Qué hace Robo cuando se pregunta algo?'], o: [['❓', ['Asks why and learns', 'Pregunta por qué y aprende']], ['😴', ['Goes to sleep', 'Se duerme']], ['🏃', ['Runs away', 'Sale corriendo']]], w: ['curious', 'curioso', 'Curious means you want to find out about things.', 'Curioso es querer descubrir cosas.'] },
+  dinoegg: { q: ['What does the name Maiasaura mean?', '¿Qué significa el nombre Maiasaura?'], o: [['🦕', ['Good mother lizard', 'Lagarto buena madre']], ['🏃', ['Fast runner', 'Corredor veloz']], ['🪽', ['Flying lizard', 'Lagarto volador']]], w: ['hatch', 'nacer (del huevo)', 'To hatch is to break out of an egg.', 'Nacer del huevo es romper el cascarón y salir.'] },
+  teethbear: { q: ['How much toothpaste should we use?', '¿Cuánta pasta de dientes usamos?'], o: [['🫛', ['As small as a pea', 'Como un chícharo']], ['🧴', ['The whole tube', 'Todo el tubo']], ['🚫', ['None at all', 'Nada']]], w: ['rinse', 'enjuagar', 'To rinse is to wash something with clean water.', 'Enjuagar es lavar algo con agua limpia.'] },
+  goodnight: { q: ['When do owls sleep?', '¿Cuándo duermen los búhos?'], o: [['☀️', ['In the day', 'De día']], ['🌙', ['At night', 'De noche']], ['🚫', ['Never', 'Nunca']]], w: ['nocturnal', 'nocturno', 'Nocturnal animals are awake at night and sleep in the day.', 'Los animales nocturnos están despiertos de noche y duermen de día.'] },
+  pigs: { q: ['Which house stood strong against the wolf?', '¿Qué casa resistió al lobo?'], o: [['🧱', ['The brick house', 'La de ladrillos']], ['🌾', ['The straw house', 'La de paja']], ['🪵', ['The stick house', 'La de palitos']]], w: ['sturdy', 'resistente', 'Sturdy means strong and hard to break.', 'Resistente es fuerte y difícil de romper.'] },
+  harerace: { q: ['Why did Hare lose the race?', '¿Por qué perdió la liebre?'], o: [['😴', ['He took a nap', 'Se durmió una siesta']], ['🐌', ['He was too slow', 'Era muy lenta']], ['🗺️', ['He got lost', 'Se perdió']]], w: ['steady', 'constante', 'Steady means you keep going, step after step.', 'Constante es seguir adelante, paso a paso.'] },
+  lionmouse: { q: ['How did the mouse help the lion?', '¿Cómo ayudó el ratón al león?'], o: [['🐭', ['He nibbled the net', 'Mordisqueó la red']], ['🦁', ['He roared loudly', 'Rugió fuerte']], ['📣', ['He called the hunter', 'Llamó al cazador']]], w: ['kindness', 'bondad', 'Kindness is being nice and helpful to others.', 'La bondad es ser amable y ayudar a los demás.'] },
+  duckling: { q: ['What did the gray duckling grow into?', '¿En qué se convirtió el patito gris?'], o: [['🦢', ['A swan', 'Un cisne']], ['🐔', ['A chicken', 'Una gallina']], ['🐟', ['A fish', 'Un pez']]], w: ['belong', 'pertenecer', 'To belong is to feel you are part of a group.', 'Pertenecer es sentir que eres parte de un grupo.'] },
+  rocket: { q: ['Why does Ava wear a space suit?', '¿Por qué Ava usa traje espacial?'], o: [['🧑‍🚀', ['There is no air in space', 'No hay aire en el espacio']], ['🌧️', ['It is raining', 'Está lloviendo']], ['🎉', ['For a party', 'Para una fiesta']]], w: ['gravity', 'gravedad', 'Gravity is the pull that keeps our feet on the ground.', 'La gravedad es la fuerza que mantiene nuestros pies en el suelo.'] },
+  fishfriends: { q: ['How did Finn make new friends?', '¿Cómo hizo amigos Finn?'], o: [['👋', ['He was brave and said hi', 'Fue valiente y saludó']], ['🙈', ['He hid', 'Se escondió']], ['💨', ['He swam away', 'Se fue nadando']]], w: ['shy', 'tímido', 'Shy means you feel a little nervous around new people.', 'Tímido es sentirse un poco nervioso con gente nueva.'] },
+  snowday: { q: ['What did they build in the snow?', '¿Qué construyeron en la nieve?'], o: [['⛄', ['A snowman', 'Un muñeco de nieve']], ['🏖️', ['A sandcastle', 'Un castillo de arena']], ['🌳', ['A treehouse', 'Una casa del árbol']]], w: ['freeze', 'congelar', 'Water freezes into ice when it gets very cold.', 'El agua se congela y se vuelve hielo cuando hace mucho frío.'] },
+  calmmonster: { q: ['What helped Max calm down?', '¿Qué ayudó a Max a calmarse?'], o: [['🌬️', ['Slow breathing', 'Respirar despacio']], ['📢', ['Yelling', 'Gritar']], ['💥', ['Breaking things', 'Romper cosas']]], w: ['frustrated', 'frustrado', 'Frustrated is how you feel when something will not work.', 'Frustrado es como te sientes cuando algo no sale.'] },
+  caterpillar: { q: ['What did the caterpillar become?', '¿En qué se convirtió la oruga?'], o: [['🦋', ['A butterfly', 'Una mariposa']], ['🐦', ['A bird', 'Un pájaro']], ['🐝', ['A bee', 'Una abeja']]], w: ['chrysalis', 'crisálida', 'A chrysalis is the hard case where a caterpillar changes.', 'La crisálida es la cubierta donde cambia la oruga.'] },
+  school: { q: ['What did Felix share with Rosie?', '¿Qué compartió Félix con Rosie?'], o: [['🖍️', ['His crayons', 'Sus crayones']], ['🥪', ['His lunch', 'Su almuerzo']], ['⚽', ['A ball', 'Una pelota']]], w: ['nervous', 'nervioso', 'Nervous is a wobbly feeling before something new.', 'Nervioso es una sensación temblorosa antes de algo nuevo.'] },
+  goldilocks: { q: ['What should Goldilocks have done first?', '¿Qué debió hacer primero Ricitos de Oro?'], o: [['🙋', ['Asked first', 'Pedir permiso']], ['🥣', ['Eaten more', 'Comer más']], ['🪑', ['Broken more chairs', 'Romper más sillas']]], w: ['permission', 'permiso', 'Permission is when someone says yes, you may.', 'Permiso es cuando alguien te dice que sí puedes.'] }
+};
+function quiz(done) { const z = QUIZ[P.s.id]; if (!z) return done(); const st = $('#stStage'), run = P.run, order = W.shuffle(z.o.map((o, k) => [o, k]));
+  st.insertAdjacentHTML('beforeend', `<div class="stQuiz"><small>${esc(T('Think about the story', 'Piensa en el cuento'))}</small><b>${esc(T(z.q[0], z.q[1]))}</b><div class="stQo">${order.map(([o, k]) => `<button class="stQb" data-k="${k}"><span class="emo">${o[0]}</span>${esc(T(o[1][0], o[1][1]))}</button>`).join('')}</div><div class="stWord" hidden></div></div>`);
+  const box = $('.stQuiz'); W.say2(z.q[0], z.q[1], { force: true }); let tries = 0;
+  box.onclick = e => { const b = e.target.closest('.stQb'); if (!b || box.dataset.done) return; tries++;
+    if (+b.dataset.k !== 0) { b.classList.add('no'); b.disabled = true; W.sfx.boop && W.sfx.boop(); W.say2('Not quite. Try again!', '¡Casi! Intenta otra vez.', { force: true }); return; }
+    box.dataset.done = 1; b.classList.add('yes'); W.sfx.chime(); if (tries === 1) W.award('reading', 2, 'stories'); else W.award('reading', 1, 'stories');
+    const wd = box.querySelector('.stWord'); wd.hidden = false; wd.innerHTML = `<i>${esc(T('New word', 'Palabra nueva'))}</i><b>${esc(W.home() === 'es' ? z.w[1] : W.tr(z.w[0], z.w[1]))}</b><span>${esc(T(z.w[2], z.w[3]))}</span><button class="toy" style="--c:var(--green)" data-a="ok">${esc(T('The End', 'Fin'))} ➡️</button>`;
+    W.say2(`Yes! New word: ${z.w[0]}. ${z.w[2]}`, `¡Sí! Palabra nueva: ${z.w[1]}. ${z.w[3]}`, { force: true });
+    wd.querySelector('[data-a=ok]').onclick = ev => { ev.stopPropagation(); if (run !== P.run) return; box.remove(); done(); }; };
+}
+function finish() { return quiz(finishEnd); }
+function finishEnd() { W.confetti(); W.sfx.chime(); W.award('reading', 3, 'stories'); W.collect('story', P.s.id);
   const st = $('#stStage'); st.insertAdjacentHTML('beforeend', `<div class="stEnd"><div class="emo">${P.s.cover}</div><b>${esc(T('The End', 'Fin'))}</b><div class="row"><button class="toy floatBtnI" style="--c:var(--green)" data-a="again"><span class="emo">🔄</span>${esc(T('Again', 'Otra vez'))}</button><button class="toy floatBtnI" style="--c:var(--purple)" data-a="next"><span class="emo">📖</span>${esc(T('Next story', 'Otro cuento'))}</button><button class="toy floatBtnI" style="--c:#fff;color:var(--ink)" data-a="lib"><span class="emo">📚</span></button></div></div>`);
   $('.stEnd').onclick = e => { const a = e.target.closest('[data-a]'); if (!a) return; if (a.dataset.a === 'again') open(P.s.id, P.movie); if (a.dataset.a === 'next') open(S[(S.indexOf(P.s) + 1) % S.length].id, P.movie); if (a.dataset.a === 'lib') library(); }; }
 function musicBed(on) { if (P.music) { clearInterval(P.music); P.music = null; } if (!on) return; const ch = [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]]; let k = 0; const play = () => { ch[k++ % 4].forEach((m, j) => W.tone(440 * Math.pow(2, (m - 69) / 12), 3.2, 'sine', .018, j * .04)); }; play(); P.music = setInterval(play, 3000); }
@@ -7249,7 +7317,7 @@ function open(id, movie) {
   el.innerHTML = `<div class="stStage" id="stStage"><canvas class="bgscene" id="stScene"></canvas><div class="stCam" id="stCam"></div><div class="stHelp" id="stHelp" hidden></div><div class="stChoice" id="stChoice" hidden></div></div>
     <div class="stText" id="stText" dir="auto"></div>
     <div class="stNav"><button class="toy round emo" style="--c:#fff;color:var(--ink)" id="stPrev">⬅️</button><button class="toy round emo" style="--c:var(--green)" id="stSay">🔊</button><div class="stDots" id="stDots"></div><button class="toy round emo" style="--c:${P.movie ? 'var(--red)' : 'var(--purple)'}" id="stMovie">${P.movie ? '⏸️' : '🎬'}</button><button class="toy round emo" style="--c:#fff;color:var(--ink)" id="stNext">➡️</button><button class="toy round emo" style="--c:#fff;color:var(--ink)" id="stLib">📚</button></div>`;
-  scene = null; musicBed(P.movie);
+  scene = null; P.bg = null; P.prevActors = []; musicBed(P.movie);
   $('#stPrev').onclick = () => { if (P.i > 0) show(P.i - 1, -1); }; $('#stNext').onclick = () => { $('#stChoice').hidden = true; $('#stHelp').hidden = true; next(); }; $('#stSay').onclick = () => show(P.i);
   $('#stLib').onclick = () => library(); $('#stMovie').onclick = () => { P.movie = !P.movie; musicBed(P.movie); $('#stMovie').textContent = P.movie ? '⏸️' : '🎬'; $('#stMovie').style.setProperty('--c', P.movie ? 'var(--red)' : 'var(--purple)'); if (P.movie) show(P.i); };
   let sx = null; $('#stStage').onpointerdown = e => { sx = e.clientX; }; $('#stStage').onpointerup = e => { if (sx == null) return; const dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 90) dx < 0 ? next() : (P.i > 0 && show(P.i - 1, -1)); };
