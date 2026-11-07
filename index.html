@@ -746,6 +746,12 @@ body[data-screen=island] #caption{top:auto;bottom:calc(env(safe-area-inset-botto
 .credits{font-size:14px;line-height:1.5;padding-left:18px;max-height:50vh;overflow:auto}.credits a{color:var(--blue)}
 .choice.dq .dinoReal{aspect-ratio:4/3;max-height:26vh;mix-blend-mode:multiply;background:transparent}
 .qPrompt{box-sizing:border-box;max-width:100%}
+/* counting cards: ten-frame under each numeral (see the quantity, not just the symbol) */
+.tenf{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;width:62%;max-width:96px;margin:4px auto 2px}
+.tenf i{aspect-ratio:1;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--line,#2B2340) 35%,transparent)}
+.tenf i.f{background:var(--blue,#2E95F0);border-color:var(--blue,#2E95F0)}
+.grid.fit .card .tenf{width:58%}
+.shSides{display:block;font-size:13px;font-weight:700;color:var(--ink2,#5B5470);margin-top:2px;letter-spacing:.02em}
 
 /* Wonder World — storybook theme: warm paper, ink outlines, solid toy shadows. Loaded last; it restyles the shell
    (bar, home, worlds, game cards, shared prompts and pop-ups) so every screen speaks one visual language. */
@@ -4122,7 +4128,7 @@ let abcLang = null;
 
 const CARDS = {
   colors: { skill: 'science', items: () => W.COLORS.map(([c, hex, o]) => ({ key: c, html: `<span class="blob emo" style="background:${hex};${c === 'white' ? 'box-shadow:inset 0 0 0 3px #D6E6F5' : ''}">${o}</span>`, lab: L => cap(L.colors[c][0]), fx: [o], color: hex, say: n => [n % 2 ? (L => PH.colorSent(L, c)) : (L => PH.color(L, c))] })) },
-  shapes: { skill: 'math', items: () => W.SHAPES.map(([s, c]) => ({ key: s, html: shapeSVG(s, c), lab: L => cap(L.shapes[s][0]), fx: ['✨', '⭐'], say: n => [n % 2 ? (L => PH.shapeSent(L, s)) : (L => PH.shape(L, s))] })) },
+  shapes: { skill: 'math', items: () => W.SHAPES.map(([s, c]) => ({ key: s, html: shapeSVG(s, c) + (n => `<small class="shSides">${n == null ? (s === 'heart' ? W.tr('curves and 1 point', 'curvas y 1 punta') : W.tr('all curves', 'todo curvas')) : W.tr(n + ' sides · ' + n + ' corners', n + ' lados · ' + n + ' esquinas')}</small>`)({ square: 4, triangle: 3, rectangle: 4, star: 10, diamond: 4 }[s]), lab: L => cap(L.shapes[s][0]), fx: ['✨', '⭐'], say: n => [n % 2 ? (L => PH.shapeSent(L, s)) : (L => PH.shape(L, s))] })) },
   weather: { skill: 'science', items: () => W.WEATHER.map(([w, e]) => ({ key: w, html: `<span class="emo">${e}</span>`, lab: L => cap(L.weather[w][0]), fx: [e], say: n => [n % 2 ? (L => PH.weatherSent(L, w)) : (L => PH.weather(L, w))] })) },
   feelings: { skill: 'feelings', items: () => W.FEELINGS.map(([f, e]) => ({ key: f, html: `<span class="emo">${e}</span>`, lab: L => cap(L.feelings[f][0]), fx: [e, '💖'], say: n => n % 2 ? [L => PH.feelSent(L, f), L => PH.feelTip(L, f)] : [L => PH.feel(L, f)] })) },
   senses: { skill: 'science', items: () => W.SENSES.map(([s, e]) => ({ key: s, html: `<span class="emo">${e}</span>`, lab: L => cap(L.senses[s][0]), fx: [e], say: n => [n % 2 ? (L => PH.senseSent(L, s)) : (L => PH.sense(L, s))] })) },
@@ -4130,7 +4136,7 @@ const CARDS = {
   vehicles: { skill: 'science', items: () => W.SETS.vehicle.map(([k, e]) => thing(k, e)) },
   fruit: { skill: 'science', items: () => W.SETS.fruit.map(([k, e]) => thing(k, e)) },
   abc: { skill: 'reading', items: () => { const id = abcLang || W.home(), L0 = W.L(id); return L0.letters.map((l, i) => ({ key: id + i, html: `<span class="letter" dir="auto">${esc(l[0])}${/[A-ZÄÖÜÑ]/.test(l[0]) ? esc(l[0].toLowerCase()) : ''}</span><span class="emo" style="font-size:38px">${l[3]}</span>`, lab: () => cap(l[2]), fx: [l[3]], say: () => [L => PH.letter(L, i)], langs: [id] })); } },
-  count: { skill: 'math', items: () => W.COUNT.map((e, i) => ({ key: 'n' + i, html: `<span class="bignum">${W.digitStr(i + 1)}</span>`, lab: L => cap(L.nums[i + 1]), show: true, i, e })) },
+  count: { skill: 'math', items: () => W.COUNT.map((e, i) => ({ key: 'n' + i, html: `<span class="bignum">${W.digitStr(i + 1)}</span><span class="tenf" aria-hidden="true">${Array.from({ length: 10 }, (_, k) => `<i class="${k <= i ? "f" : ""}"></i>`).join("")}</span>`, lab: L => cap(L.nums[i + 1]), show: true, i, e })) },
   hello: { skill: 'languages', items: () => W.LANGS.map(l => ({ key: l.id, html: `<span class="emo">${l.flag}</span>`, lab: () => l.native, sub: () => W.L(l.id).hello, fx: [l.flag, '👋'], say: () => [L => L.hello], langs: [l.id] })) },
   love: { skill: 'feelings', items: null }
 };
