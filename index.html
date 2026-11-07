@@ -6487,9 +6487,8 @@ W.screens.dino = {
 W.dinoSpotlight = (id) => { const d = byId(id); if (d) spotlight([d], 0); };
 })();
 </script>
-<script>/* Wonder World — Baby Care: the child takes care of a baby. Real routines, step by step:
-   brush teeth, brush hair, potty, wash hands, get dressed for the weather, mealtime, diaper change, boo-boo care, soothe a crying baby, bedtime,
-   and "Baby's Day" which strings them into one long morning-to-night adventure. */
+<script>/* Wonder World — Baby Care: the child gently helps a baby with three simple routines:
+   brush teeth, brush hair, and put on socks and shoes. Nothing is ever taken off. */
 (() => {
 'use strict';
 const W = window.WW, { $, $$, esc, rnd, shuffle, clamp } = W;
@@ -6532,15 +6531,14 @@ function babySVG(st) {
   s += `<ellipse cx="118" cy="372" rx="30" ry="24" fill="${w.pants ? w.pants : skin}"/><ellipse cx="202" cy="372" rx="30" ry="24" fill="${w.pants ? w.pants : skin}"/>`;
   const foot = w.shoes ? w.shoes : w.socks ? w.socks : skin; s += `<ellipse cx="104" cy="386" rx="24" ry="13" fill="${foot}"/><ellipse cx="216" cy="386" rx="24" ry="13" fill="${foot}"/>`;
   // torso
-  const top = w.coat || w.raincoat || w.pj || w.shirt || (st.bare ? skin : b.outfit);
+  const top = w.coat || w.raincoat || w.pj || w.shirt || b.outfit;
   s += `<path d="M92 262 Q160 236 228 262 L246 360 Q160 392 74 360Z" fill="${top}"/>`;
   if (w.pj) for (let i = 0; i < 6; i++) s += `<circle cx="${110 + (i % 3) * 50}" cy="${290 + Math.floor(i / 3) * 40}" r="7" fill="#fff" opacity=".7"/>`;
   if (w.raincoat) s += `<path d="M160 250 L160 372" stroke="#C99A00" stroke-width="4"/><circle cx="170" cy="290" r="5" fill="#C99A00"/><circle cx="170" cy="320" r="5" fill="#C99A00"/>`;
   if (st.bib) s += `<path d="M112 258 Q160 250 208 258 Q206 322 160 330 Q114 322 112 258Z" fill="#fff" stroke="#9FD7FF" stroke-width="4"/><circle cx="160" cy="292" r="10" fill="#FFD166"/>`;
-  if (w.diaper && st.bare) s += `<path d="M86 330 Q160 318 234 330 L226 372 Q160 392 94 372Z" fill="${w.diaper}" stroke="#DDE6EE" stroke-width="3"/>`;
   if (st.dirty) s += `<ellipse cx="140" cy="300" rx="12" ry="8" fill="#9A6A3A" opacity=".55"/><ellipse cx="190" cy="318" rx="9" ry="6" fill="#C0392B" opacity=".4"/>`;
   // arms
-  const sleeve = w.coat || w.raincoat || w.pj || w.shirt || (st.bare ? skin : b.outfit), hand = w.mittens || skin;
+  const sleeve = w.coat || w.raincoat || w.pj || w.shirt || b.outfit, hand = w.mittens || skin;
   s += `<ellipse cx="74" cy="298" rx="24" ry="44" fill="${sleeve}" transform="rotate(${st.armsUp ? 150 : 22} 74 298)"/><ellipse cx="246" cy="298" rx="24" ry="44" fill="${sleeve}" transform="rotate(${st.armsUp ? -150 : -22} 246 298)"/>`;
   s += st.armsUp ? `<circle cx="96" cy="232" r="20" fill="${hand}"/><circle cx="224" cy="232" r="20" fill="${hand}"/>` : `<circle cx="58" cy="338" r="20" fill="${hand}"/><circle cx="262" cy="338" r="20" fill="${hand}"/>`;
   if (w.scarf) s += `<path d="M96 248 Q160 272 224 248 L224 266 Q160 290 96 266Z" fill="${w.scarf}"/><rect x="190" y="258" width="22" height="50" rx="8" fill="${w.scarf}"/>`;
@@ -6570,10 +6568,6 @@ function babySVG(st) {
   return s + '</svg>';
 }
 
-/* ---------- hands (for hand washing) ---------- */
-function handsSVG(st) { const skin = SKIN[BB().skin], dk = W.shade(skin, -20);
-  const hand = (x, flip) => `<g transform="translate(${x} 0) scale(${flip ? -1 : 1} 1)"><rect x="-38" y="210" width="76" height="120" rx="30" fill="${skin}"/>${[-30, -12, 6, 24].map((fx, i) => `<rect x="${fx - 8}" y="${118 + Math.abs(i - 1.5) * 10}" width="18" height="${100 - Math.abs(i - 1.5) * 12}" rx="9" fill="${skin}" stroke="${dk}" stroke-width="1.5"/>`).join('')}<rect x="30" y="200" width="18" height="62" rx="9" fill="${skin}" stroke="${dk}" stroke-width="1.5" transform="rotate(40 38 230)"/><path d="M-22 262 q22 12 44 0" stroke="${dk}" stroke-width="3" fill="none"/></g>`;
-  return `<svg class="babySvg" viewBox="0 0 320 400"><rect x="10" y="330" width="300" height="70" rx="20" fill="#DCEFF8"/><ellipse cx="160" cy="352" rx="120" ry="20" fill="#B8DDF0"/>${hand(100, false)}${hand(220, true)}${st.soap ? `<g opacity="${st.soap}">${Array.from({ length: 18 }, (_, i) => `<circle cx="${70 + (i * 37) % 190}" cy="${170 + (i * 53) % 150}" r="${9 + (i % 4) * 4}" fill="#fff" stroke="#BFE6FF" stroke-width="2" opacity=".9"/>`).join('')}</g>` : ''}</svg>`; }
 
 /* ---------- engine ---------- */
 const E = { run: 0, st: {}, cleanup: [] };
@@ -6586,7 +6580,7 @@ function buildStage(scene, steps) {
   $('#bcBox').onpointerdown = () => { E.busyTap = !$('#bcMeter').hidden; }; // snapshot at press: the last scrub/comb/rock stroke hides the meter before click fires
   $('#bcBox').onclick = e => { if (E.onBaby) return E.onBaby(e); if (E.busyTap || !$('#bcMeter').hidden) return; W.react($('#bcArt'), 'jump'); W.sfx.boing(); };
 }
-function draw(extra) { Object.assign(E.st, extra || {}); const a = $('#bcArt'); if (a) a.innerHTML = E.hands ? handsSVG(E.st) : babySVG(E.st); }
+function draw(extra) { Object.assign(E.st, extra || {}); const a = $('#bcArt'); if (a) a.innerHTML = babySVG(E.st); }
 function markStep(i) { $$('.bcStep').forEach((s, k) => { s.classList.toggle('now', k === i); s.classList.toggle('done', k < i); }); }
 function prop(e, x, y, size = 16, cls = '') { const b = document.createElement('button'); b.className = 'bcProp emo ' + cls; b.textContent = e; b.style.left = x + '%'; b.style.top = y + '%'; b.style.fontSize = `min(${size}vmin, ${size * 9}px)`; $('#bcProps').append(b); return b; }
 function over(e, x, y, size = 7, cls = '') { const s = document.createElement('span'); s.className = 'bcSpot emo ' + cls; s.textContent = e; s.style.left = x + '%'; s.style.top = y + '%'; s.style.fontSize = `min(${size}vmin, ${size * 9}px)`; $('#bcOver').append(s); return s; }
@@ -6629,21 +6623,7 @@ function comb() { const box = $('#bcBox'); const toolEl = document.createElement
     const fin = () => { box.removeEventListener('pointerdown', dn); removeEventListener('pointermove', mv); removeEventListener('pointerup', up); toolEl.remove(); meter.hidden = true; E.st.messy = E.st.messy.map(() => 0); draw(); res(); };
     const dn = e => { down = true; mv(e); }, up = () => { down = false; };
     box.addEventListener('pointerdown', dn); addEventListener('pointermove', mv); addEventListener('pointerup', up); E.cleanup.push(() => { box.removeEventListener('pointerdown', dn); removeEventListener('pointermove', mv); removeEventListener('pointerup', up); toolEl.remove(); }); }); }
-// rock the baby gently side to side
-function rock(n = 6) { const box = $('#bcBox'), meter = $('#bcMeter'), bar = meter.firstElementChild; meter.hidden = false; pulse(box); let dir = 0, k = 0, lx = null, sx = null, dragged = false;
-  return new Promise(res => { const step = d => { dir = d; k++; box.style.transform = `translate(-50%,-50%) rotate(${d * 6}deg)`; W.tone(d > 0 ? 392 : 330, .3, 'sine', .08); bar.style.width = Math.min(100, k / n * 100) + '%'; if (k >= n) fin(); };
-    const mv = e => { if (lx == null) return; if (Math.abs(e.clientX - sx) > 12) dragged = true; const dx = e.clientX - lx; if (Math.abs(dx) > 40) { const d = Math.sign(dx); if (d !== dir) step(d); lx = e.clientX; } };
-    const dn = e => { lx = sx = e.clientX; dragged = false; unpulse(box); }, up = () => { if (lx != null && !dragged) step(dir > 0 ? -1 : 1); lx = sx = null; };
-    const fin = () => { box.removeEventListener('pointerdown', dn); removeEventListener('pointermove', mv); removeEventListener('pointerup', up); box.style.transform = ''; meter.hidden = true; res(); };
-    box.addEventListener('pointerdown', dn); addEventListener('pointermove', mv); addEventListener('pointerup', up); E.cleanup.push(fin); }); }
-function holdOn(el, ms, onTick) { pulse(el); return new Promise(res => { let t0 = 0, acc = 0, raf = 0; const tick = () => { const p = (acc + performance.now() - t0) / ms; if (onTick) onTick(Math.min(1, p)); if (p >= 1) { stop(); unpulse(el); res(); } else raf = requestAnimationFrame(tick); };
-  const dn = e => { e.preventDefault(); const now = performance.now(); if (raf) { acc += now - t0; cancelAnimationFrame(raf); } acc += 250; W.sfx.pop(); t0 = now; raf = requestAnimationFrame(tick); }, up = () => { if (raf) { acc += performance.now() - t0; cancelAnimationFrame(raf); raf = 0; } };
-  const stop = () => { el.removeEventListener('pointerdown', dn); removeEventListener('pointerup', up); cancelAnimationFrame(raf); };
-  el.addEventListener('pointerdown', dn); addEventListener('pointerup', up); E.cleanup.push(stop); }); }
-const tinkle = () => { for (let i = 0; i < 8; i++) W.tone(1800 + Math.random() * 800, .06, 'sine', .05, i * .12); W.noise(1, .05, 3000, 'highpass'); };
-const flushSnd = () => { W.noise(1.4, .25, 800); W.tone(300, 1.2, 'sine', .08, 0, 120); };
 const water = (d = .8) => W.noise(d, .12, 2600, 'bandpass');
-function lullaby() { const notes = [67, 64, 67, 64, 67, 69, 67, 65, 64, 62, 64, 65, 64, 62, 60]; notes.forEach((m, i) => W.tone(440 * Math.pow(2, (m - 69) / 12), .55, 'sine', .09, i * .42)); }
 function cheer(r) { W.sfx.chime(); W.confetti(); }
 
 /* ---------- routines ---------- */
@@ -6663,93 +6643,16 @@ R.hair = { e: '🪮', scene: 'play', steps: [{ icon: '🪞' }, { icon: '🪮' },
     markStep(1); say('Gently brush the hair. Slow and soft, so it doesn\'t pull.', 'Cepilla el pelo con cuidado. Suave y despacio, para que no jale.'); await comb(); if (!inRun(r)) return; draw({ face: 'smile' }); W.sfx.sparkle();
     markStep(2); say('So neat! Pick something pretty.', '¡Qué ordenado! Escoge algo bonito.'); const pick = await trayPick([{ e: '🎀', k: 'bow' }, { e: '👒', k: 'sun' }, { e: '🧢', k: 'cap' }], () => true); if (!inRun(r)) return; draw(pick.k === 'bow' ? { bow: true } : { hat: pick.k === 'cap' ? 'cap' : 'sun' }); $('#bcTray').innerHTML = '';
     markStep(3); const [x, y] = W.centerOf($('#bcBox')); W.burst(x, y - 60, ['✨', '💖', '🌟'], 18); say(`${BB().name} looks wonderful! Thank you for being so gentle.`, `¡${BB().name} se ve precioso! Gracias por ser tan cuidadoso.`); } };
-R.potty = { e: '🚽', scene: 'bath', steps: [{ icon: '💭' }, { icon: '🚽' }, { icon: '👖' }, { icon: '⏳' }, { icon: '🧻' }, { icon: '🌀' }, { icon: '🧼' }],
-  async run(r) { draw({ face: 'wiggle', wear: { pants: '#5B8DEF' } });
-    markStep(0); W.react($('#bcBox'), 'wiggle'); say(`${BB().name} is wiggling. I need to go potty! Tap ${BB().name} to listen.`, `${BB().name} se mueve mucho. ¡Necesito ir al baño! Toca a ${BB().name} para escuchar.`); await tapBaby(); if (!inRun(r)) return;
-    say('Good listening! Let\'s go to the potty. Tap the potty.', '¡Muy bien! Vamos al baño. Toca el baño.');
-    markStep(1); const pot = prop('🚽', 82, 50, 20); await tapOn(pot); if (!inRun(r)) return; $('#bcBox').classList.add('onPotty');
-    markStep(2); say('Pants down. Tap the pants.', 'Bajamos los pantalones. Toca los pantalones.'); await tapBaby(); if (!inRun(r)) return; draw({ wear: {}, bare: true, face: 'smile' }); W.sfx.whoosh();
-    markStep(3); say('Sit on the potty and wait. One, two, three…', 'Siéntate en el baño y espera. Uno, dos, tres…'); await sleep(900); if (!inRun(r)) return; tinkle(); await sleep(1400); if (!inRun(r)) return; say('Tinkle tinkle! You did it!', '¡Pipí! ¡Lo lograste!'); W.burst(...W.centerOf($('#bcBox')), ['⭐', '💧'], 10);
-    markStep(4); say('Now wipe with toilet paper, front to back.', 'Ahora límpiate con papel, de adelante hacia atrás.'); const tp = prop('🧻', 12, 44, 12); await tapOn(tp); if (!inRun(r)) return; W.noise(.4, .12, 3000, 'highpass');
-    markStep(5); say('Flush! Tap the potty.', '¡Jala la cadena! Toca el baño.'); await tapOn(pot); if (!inRun(r)) return; flushSnd(); pot.animate([{ transform: 'translate(-50%,-50%) rotate(0)' }, { transform: 'translate(-50%,-50%) rotate(360deg) scale(1.1)' }], { duration: 900 }); await sleep(900);
-    draw({ bare: false, wear: { pants: '#5B8DEF' } }); $('#bcBox').classList.remove('onPotty'); say('Pants up!', '¡Pantalones arriba!');
-    markStep(6); await sleep(600); say('Always wash your hands after the potty. Scrub the germs away!', 'Siempre lávate las manos después del baño. ¡Quita los microbios!'); const g = [[20, 80], [80, 80], [22, 88], [78, 88]].map(([x, y]) => over('🦠', x, y, 6, 'germ')); await scrub(g, '🧼', { bubbles: ['🫧'] }); if (!inRun(r)) return;
-    const kid = W.kid(); const n = W.collect('potty', Date.now().toString(36)) ? Object.keys(W.collected('potty')).length : 0;
-    say(`Hooray! Big kid potty! That's ${n} potty star${n === 1 ? '' : 's'} on the chart!`, `¡Hurra! ¡Fuiste al baño como niño grande! ¡Ya tienes ${n} estrella${n === 1 ? '' : 's'} en la tabla!`); } };
-R.hands = { e: '🧼', scene: 'bath', hands: true, steps: [{ icon: '🚰' }, { icon: '🧴' }, { icon: '🫧' }, { icon: '💧' }, { icon: '🧻' }],
-  async run(r) { draw({ soap: 0 }); const germs = [[28, 44], [38, 58], [30, 70], [70, 44], [62, 58], [72, 70], [50, 52]].map(([x, y]) => over('🦠', x, y, 6, 'germ'));
-    markStep(0); say('Look! Germs on our hands. We can\'t see them for real, but soap and water wash them away. Turn on the water!', '¡Mira! Microbios en las manos. De verdad no se ven, pero el agua y el jabón los quitan. ¡Abre el agua!'); const tap = prop('🚰', 50, 8, 13); await tapOn(tap); if (!inRun(r)) return; water(1.2); $('#bcStage').classList.add('running');
-    markStep(1); say('Now soap! Tap the soap two times.', '¡Ahora jabón! Toca el jabón dos veces.'); const soap = prop('🧴', 86, 30, 13); await tapOn(soap); W.noise(.2, .1, 1200); await tapOn(soap); if (!inRun(r)) return; draw({ soap: .7 }); $('#bcStage').classList.remove('running');
-    markStep(2); say('Scrub, scrub! Palms, backs, between the fingers. Let\'s sing while we scrub!', '¡Frota, frota! Palmas, dorsos, entre los dedos. ¡Cantemos mientras frotamos!');
-    const song = [67, 67, 69, 67, 72, 71, 67, 67, 69, 67, 74, 72]; let si = 0; const sg = setInterval(() => { W.tone(440 * Math.pow(2, (song[si++ % song.length] - 69) / 12), .3, 'triangle', .07); }, 420);
-    await scrub(germs, '🫧', { bubbles: ['🫧'], pop: ['🫧', '💥', '✨'], hp: 1.4 }); clearInterval(sg); if (!inRun(r)) return;
-    markStep(3); say('Rinse the bubbles away!', '¡Enjuaga las burbujas!'); await tapOn(tap); if (!inRun(r)) return; water(1.2); $('#bcStage').classList.add('running'); for (let k = 7; k >= 0; k--) { draw({ soap: k / 10 }); await sleep(150); } $('#bcStage').classList.remove('running');
-    markStep(4); say('Dry your hands with the towel.', 'Sécate las manos con la toalla.'); const drops = [[30, 50], [70, 50], [40, 72], [60, 72], [50, 40]].map(([x, y]) => over('💧', x, y, 5)); await scrub(drops, '🧻', { pop: ['✨'] }); if (!inRun(r)) return;
-    say('Clean hands! Germs gone. Wash before eating and after the potty.', '¡Manos limpias! Adiós microbios. Lávate antes de comer y después del baño.'); } };
-const WEATHER = [
-  { k: 'sunny', e: '☀️', say: ['It\'s sunny and hot today!', '¡Hoy hace sol y calor!'], need: ['sun', 'glasses'], hat: 'sun', top: '#FFD166' },
-  { k: 'rainy', e: '🌧️', say: ['It\'s rainy today! Splash!', '¡Hoy está lloviendo! ¡Chof!'], need: ['raincoat', 'boots'], hood: '#FFD23F', top: '#9FD7FF' },
-  { k: 'snowy', e: '❄️', say: ['It\'s snowy and cold today! Brrr!', '¡Hoy nieva y hace frío! ¡Brrr!'], need: ['coat', 'wool', 'mittens'], hat: 'wool', top: '#E0F2FF' }];
-const CLOTHES = { sun: { e: '👒' }, glasses: { e: '🕶️' }, raincoat: { e: '🧥' }, boots: { e: '🥾' }, coat: { e: '🧥' }, wool: { e: '🧣' }, mittens: { e: '🧤' }, swim: { e: '🩱' }, flip: { e: '🩴' } };
-R.dress = { e: '👕', scene: 'play', steps: [{ icon: '🩲' }, { icon: '👕' }, { icon: '👖' }, { icon: '🧦' }, { icon: '👟' }, { icon: '🌦️' }],
-  async run(r) { const wx = rnd(WEATHER); draw({ bare: true, wear: { diaper: '#fff' }, face: 'smile' }); $('#bcProps').innerHTML = ''; prop(wx.e, 86, 12, 14, 'wx');
-    say(`Good morning! ${wx.say[0]} Let's get dressed, one piece at a time.`, `¡Buenos días! ${wx.say[1]} Vamos a vestirnos, una prenda a la vez.`);
-    const order = [['🩲', 'Underwear first!', '¡Primero la ropa interior!', { diaper: '#fff' }], ['👕', 'Now the shirt. Arms up!', 'Ahora la camiseta. ¡Brazos arriba!', { shirt: BB().outfit }], ['👖', 'Pants, one leg, two legs!', '¡Pantalones, una pierna, dos piernas!', { pants: '#5B8DEF' }], ['🧦', 'Socks on toes!', '¡Calcetines en los pies!', { socks: '#FF8FC2' }], ['👟', 'Shoes! Left and right.', '¡Zapatos! Izquierdo y derecho.', { shoes: '#FF6B6B' }]];
-    for (let i = 0; i < order.length; i++) { const [e, en, es, wear] = order[i]; markStep(i); say(en, es); if (i === 1) draw({ armsUp: true }); await dragTo(e, $('#bcBox')); if (!inRun(r)) return; draw({ armsUp: false, bare: false, wear: Object.assign({}, E.st.wear, wear) }); W.react($('#bcBox'), 'jump'); W.sfx.sparkle(); }
-    markStep(5); say(`${wx.say[0]} What else do we need?`, `${wx.say[1]} ¿Qué más necesitamos?`);
-    const options = shuffle([...wx.need, ...shuffle(Object.keys(CLOTHES).filter(k => !wx.need.includes(k) && !(wx.k === 'rainy' && k === 'coat') && !(wx.k === 'snowy' && k === 'raincoat'))).slice(0, 3)]);
-    const items = options.map(k => ({ e: CLOTHES[k].e, k })); let got = 0;
-    while (got < wx.need.length) { const it = await trayPick(items, it => wx.need.includes(it.k) && !it.used, it => say(wx.k === 'snowy' ? 'Brrr, too cold for that!' : wx.k === 'sunny' ? 'Hmm, it\'s too hot for that!' : 'That won\'t keep us dry!', wx.k === 'snowy' ? '¡Brrr, hace mucho frío para eso!' : wx.k === 'sunny' ? '¡Mmm, hace mucho calor para eso!' : '¡Eso no nos mantiene secos!')); if (!inRun(r)) return; it.used = true; got++;
-      const wr = Object.assign({}, E.st.wear); if (it.k === 'sun') draw({ hat: 'sun' }); if (it.k === 'glasses') wr.glasses = 1; if (it.k === 'raincoat') { wr.raincoat = '#FFD23F'; draw({ hood: '#FFD23F' }); } if (it.k === 'boots') wr.shoes = '#FFD23F'; if (it.k === 'coat') wr.coat = '#E05A5A'; if (it.k === 'wool') { wr.scarf = '#6FC3FF'; draw({ hat: 'wool' }); } if (it.k === 'mittens') wr.mittens = '#6FC3FF'; draw({ wear: wr }); W.sfx.sparkle(); }
-    $('#bcTray').innerHTML = ''; say(`All dressed for ${wx.k} weather! Great job!`, '¡Listo para el clima de hoy! ¡Muy bien!'); } };
-R.feed = { e: '🥣', scene: 'kitchen', steps: [{ icon: '🧼' }, { icon: '🧣' }, { icon: '🥄' }, { icon: '🍼' }, { icon: '😮‍💨' }, { icon: '🧻' }],
-  async run(r) { draw({ face: 'cry', bib: false });
-    markStep(0); say(`${BB().name} is hungry! First, wash hands before we eat.`, `¡${BB().name} tiene hambre! Primero, lavamos las manos antes de comer.`); const g = [[20, 80], [80, 80]].map(([x, y]) => over('🦠', x, y, 6, 'germ')); await scrub(g, '🧼', { bubbles: ['🫧'] }); if (!inRun(r)) return;
-    markStep(1); say('Put on the bib so we stay clean.', 'Ponemos el babero para no ensuciarnos.'); await dragTo('🧣', $('#bcBox')); if (!inRun(r)) return; draw({ bib: true, face: 'smile' });
-    markStep(2); const bowl = prop('🥣', 14, 70, 14); say('Yummy food! Scoop with the spoon and feed the baby.', '¡Comida rica! Toma con la cuchara y dale de comer al bebé.');
-    const foods = shuffle(['🥕', '🍌', '🥑', '🍠', '🍎', '🥦']); for (let i = 0; i < 5; i++) { await dragTo('🥄', $('#bcBox'), { near: n => draw({ face: n ? 'open' : 'smile' }) }); if (!inRun(r)) return; draw({ face: 'chew' }); W.noise(.08, .2, 700); const [x, y] = W.centerOf($('#bcBox')); W.burst(x, y - 30, [foods[i], '😋', '💖'], 8); if (i === 2) draw({ food: true }); await sleep(600); if (!inRun(r)) return; draw({ face: 'smile' }); say(rnd(['Yum!', 'Mmm!', 'More please!', 'Delicious!']), rnd(['¡Ñam!', '¡Mmm!', '¡Más, por favor!', '¡Delicioso!'])); }
-    bowl.remove(); markStep(3); say('Now a drink of milk. Hold the bottle.', 'Ahora un poquito de leche. Sostén el biberón.'); const bot = prop('🍼', 70, 58, 14); await holdOn(bot, 1600, p => { bot.style.transform = `translate(-50%,-50%) rotate(${-40 * p}deg)`; if (Math.random() < .1) W.tone(600, .05, 'sine', .04); }); if (!inRun(r)) return; bot.remove();
-    markStep(4); say('Burp time! Pat pat on the back.', '¡Hora de sacar el aire! Pat pat en la espalda.'); for (let i = 0; i < 3; i++) { await tapBaby(); if (!inRun(r)) return; W.tone(200, .06, 'sine', .15); } W.tone(120, .35, 'sawtooth', .12, 0, 90); draw({ face: 'o' }); say('Burp! Excuse me! Hee hee!', '¡Eructo! ¡Perdón! ¡Ji ji!'); W.sfx.giggle(); await sleep(900);
-    markStep(5); draw({ face: 'smile' }); say('Wipe the messy face.', 'Limpia la carita.'); const sp = [[44, 52], [56, 55], [52, 48]].map(([x, y]) => over('🟠', x, y, 4)); await scrub(sp, '🧻'); if (!inRun(r)) return; draw({ food: false, bib: false });
-    say('A full, happy tummy!', '¡Una pancita llena y feliz!'); } };
-R.diaper = { e: '🧷', scene: 'nursery', steps: [{ icon: '💨' }, { icon: '🧻' }, { icon: '🧴' }, { icon: '🧷' }, { icon: '🧼' }],
-  async run(r) { draw({ bare: true, wear: { diaper: '#F2E6C8' }, face: 'cry' }); const stink = over('💨', 60, 84, 6);
-    markStep(0); say(`Pee-yew! ${BB().name} needs a new diaper. Take off the old one.`, `¡Fuchi! ${BB().name} necesita un pañal nuevo. Quita el pañal viejo.`); await tapBaby(); if (!inRun(r)) return; stink.remove(); draw({ wear: {} }); W.sfx.whoosh();
-    markStep(1); say('Wipe gently.', 'Limpia con cuidado.'); const s = [[40, 86], [60, 86], [50, 82]].map(([x, y]) => over('🟤', x, y, 3.5)); await scrub(s, '🧻'); if (!inRun(r)) return;
-    markStep(2); say('A little cream so the skin stays soft.', 'Un poquito de crema para que la piel esté suave.'); const cr = prop('🧴', 14, 60, 12); await tapOn(cr); if (!inRun(r)) return; W.sfx.sparkle(); cr.remove();
-    markStep(3); say('Now a fresh, clean diaper!', '¡Ahora un pañal limpio y nuevo!'); await dragTo('🧷', $('#bcBox')); if (!inRun(r)) return; draw({ wear: { diaper: '#fff' }, face: 'smile' }); W.react($('#bcBox'), 'jump');
-    markStep(4); say('And wash our hands!', '¡Y nos lavamos las manos!'); const g = [[20, 80], [80, 80]].map(([x, y]) => over('🦠', x, y, 6, 'germ')); await scrub(g, '🧼', { bubbles: ['🫧'] }); if (!inRun(r)) return; draw({ bare: false, wear: {} });
-    say('Fresh and happy!', '¡Limpio y feliz!'); } };
-R.booboo = { e: '🩹', scene: 'play', steps: [{ icon: '🤗' }, { icon: '💧' }, { icon: '🩹' }, { icon: '😘' }, { icon: '😊' }],
-  async run(r) { draw({ face: 'cry', tears: true, scrape: true });
-    markStep(0); say(`Oh no, ${BB().name} fell down and got a boo-boo. Baby feels sad. Give a big hug.`, `Oh no, ${BB().name} se cayó y se lastimó. El bebé está triste. Dale un abrazo.`); await tapBaby(); if (!inRun(r)) return; W.sfx.chime(); draw({ tears: false });
-    markStep(1); say('Let\'s clean the scrape with water, gently.', 'Limpiemos la herida con agua, con cuidado.'); const d = [[36, 90], [40, 92]].map(([x, y]) => over('🟫', x, y, 3)); await scrub(d, '💧', { sound: () => W.noise(.08, .08, 3000, 'highpass') }); if (!inRun(r)) return;
-    markStep(2); say('Now a bandage.', 'Ahora una curita.'); await dragTo('🩹', $('#bcBox')); if (!inRun(r)) return; draw({ scrape: false, bandage: true, face: 'o' });
-    markStep(3); say('A kiss makes it better.', 'Un besito lo hace sentir mejor.'); await tapBaby(); if (!inRun(r)) return; const [x, y] = W.centerOf($('#bcBox')); W.burst(x, y, ['😘', '💖', '💕'], 16);
-    markStep(4); draw({ face: 'smile' }); say('All better! When someone is hurt, we help and we tell a grown-up.', '¡Ya está mejor! Cuando alguien se lastima, ayudamos y le decimos a un adulto.'); } };
-R.soothe = { e: '🤱', scene: 'nursery', steps: [{ icon: '😢' }, { icon: '🤲' }, { icon: '🧸' }, { icon: '🎵' }, { icon: '😊' }],
-  async run(r) { draw({ face: 'cry', tears: true }); const cry = setInterval(() => W.tone(700 + Math.random() * 200, .3, 'sine', .04, 0, 500), 900); E.cleanup.push(() => clearInterval(cry));
-    markStep(0); say(`${BB().name} is crying. Babies cry when they are tired, hungry or scared. Let's help. Tap to pick up the baby.`, `${BB().name} está llorando. Los bebés lloran cuando tienen sueño, hambre o miedo. Ayudemos. Toca para cargar al bebé.`); await tapBaby(); if (!inRun(r)) return;
-    markStep(1); say('Rock the baby gently. Tap or swipe side to side.', 'Mece al bebé suavecito. Toca o desliza de lado a lado.'); await rock(6); if (!inRun(r)) return; draw({ tears: false });
-    markStep(2); say('Give a soft teddy to cuddle.', 'Dale un osito suave para abrazar.'); await dragTo('🧸', $('#bcBox')); if (!inRun(r)) return; draw({ face: 'o' });
-    markStep(3); clearInterval(cry); say('Sing a quiet song. Tap the music.', 'Canta una canción suave. Toca la música.'); const m = prop('🎵', 84, 28, 12); await tapOn(m); if (!inRun(r)) return; lullaby(); await sleep(2400); if (!inRun(r)) return;
-    markStep(4); draw({ face: 'smile' }); W.sfx.giggle(); say('The baby feels safe and happy. You are so kind!', 'El bebé se siente seguro y feliz. ¡Eres muy cariñoso!'); } };
-R.bedtime = { e: '🌙', scene: 'nursery', steps: [{ icon: '🛁' }, { icon: '👕' }, { icon: '🪥' }, { icon: '📖' }, { icon: '🧸' }, { icon: '💡' }, { icon: '😴' }],
-  async run(r) { draw({ face: 'wiggle', dirty: true });
-    markStep(0); say('It\'s getting dark. Time for the bedtime routine! First, a warm bath.', 'Ya está oscureciendo. ¡Hora de la rutina para dormir! Primero, un baño calientito.'); const s = [[44, 74], [58, 78]].map(([x, y]) => over('🫧', x, y, 6)); await scrub(s, '🧽', { bubbles: ['🫧'] }); if (!inRun(r)) return; draw({ dirty: false });
-    markStep(1); say('Cozy pajamas on.', 'Nos ponemos la pijama.'); await dragTo('👕', $('#bcBox')); if (!inRun(r)) return; draw({ wear: { pj: '#8E7CF0', socks: '#C9A0FF' } });
-    markStep(2); say('Brush teeth before bed.', 'Cepilla los dientes antes de dormir.'); draw({ face: 'open' }); const g = [[44, 50.5], [56, 50.5], [50, 62.5]].map(([x, y]) => over('🦠', x, y, 3.6, 'germ')); await scrub(g, '🪥', { bubbles: ['🫧'] }); if (!inRun(r)) return; draw({ face: 'smile' });
-    markStep(3); say('Story time! Tap the book.', '¡Hora del cuento! Toca el libro.'); const bk = prop('📖', 14, 40, 13); await tapOn(bk); if (!inRun(r)) return; say('Once upon a time, a little star said goodnight to the moon.', 'Había una vez, una estrellita que le dio las buenas noches a la luna.'); await sleep(3500); if (!inRun(r)) return; bk.remove();
-    markStep(4); say('Give the teddy a hug too.', 'Abraza también al osito.'); await dragTo('🧸', $('#bcBox')); if (!inRun(r)) return;
-    markStep(5); say('Lights off. Tap the lamp.', 'Apaga la luz. Toca la lámpara.'); const lamp = prop('💡', 84, 22, 12); await tapOn(lamp); if (!inRun(r)) return; $('#bcStage').classList.add('night'); W.tone(220, .2, 'square', .05);
-    markStep(6); lullaby(); draw({ face: 'sleep' }); for (let i = 0; i < 3; i++) setTimeout(() => { const b = $('#bcBox'); if (b) { const [x, y] = W.centerOf(b); W.burst(x + 60, y - 120, ['💤', '⭐', '🌙'], 4); } }, i * 900);
-    say(`Goodnight, ${BB().name}. Sweet dreams.`, `Buenas noches, ${BB().name}. Dulces sueños.`, { force: true }); await sleep(2600); } };
-// Baby's Day: a long, connected session
-const DAY = [['🌅', 'Good morning! Wake up time.', '¡Buenos días! Hora de despertar.', 'potty'], ['☀️', 'Wash hands.', 'Lavar las manos.', 'hands'], ['🥣', 'Breakfast!', '¡Desayuno!', 'feed'], ['🪥', 'Brush teeth.', 'Cepillar los dientes.', 'teeth'], ['👕', 'Get dressed.', 'Vestirse.', 'dress'], ['🪮', 'Brush hair.', 'Peinarse.', 'hair'], ['🛝', 'Playtime! Oops, a boo-boo.', '¡A jugar! Ay, un raspón.', 'booboo'], ['🧷', 'Diaper check.', 'Revisar el pañal.', 'diaper'], ['🌙', 'Bedtime.', 'A dormir.', 'bedtime']];
+R.shoes = { e: '👟', scene: 'play', steps: [{ icon: '🧦' }, { icon: '👟' }, { icon: '🎀' }, { icon: '😊' }],
+  async run(r) { draw({ face: 'smile' });
+    markStep(0); say(`${BB().name} wants to go outside and play! First, socks on the feet.`, `¡${BB().name} quiere salir a jugar! Primero, los calcetines en los pies.`); await dragTo('🧦', $('#bcBox')); if (!inRun(r)) return; draw({ wear: { socks: '#FF8FC2' } }); W.react($('#bcBox'), 'jump'); W.sfx.sparkle();
+    markStep(1); say('Now the shoes! Left and right.', '¡Ahora los zapatos! Izquierdo y derecho.'); await dragTo('👟', $('#bcBox')); if (!inRun(r)) return; draw({ wear: { socks: '#FF8FC2', shoes: '#FF6B6B' } }); W.react($('#bcBox'), 'jump'); W.sfx.sparkle();
+    markStep(2); say('Tie the laces. Tap one shoe, then the other!', 'Ata los cordones. ¡Toca un zapato y luego el otro!'); await tapBaby(); if (!inRun(r)) return; W.sfx.pop(); await tapBaby(); if (!inRun(r)) return; W.sfx.sparkle();
+    markStep(3); const [x, y] = W.centerOf($('#bcBox')); W.burst(x, y + 60, ['✨', '👟', '⭐'], 18); say('All ready to play! Great job!', '¡Listo para jugar! ¡Muy bien!'); } };
 
 /* ---------- screens ---------- */
 async function play(id, fromDay) {
-  const rt = R[id], r = ++E.run; E.cleanup.forEach(f => { try { f(); } catch (e) {} }); E.cleanup = []; E.st = { wear: {}, messy: [] }; E.hands = !!rt.hands; E.onBaby = null;
+  const rt = R[id], r = ++E.run; E.cleanup.forEach(f => { try { f(); } catch (e) {} }); E.cleanup = []; E.st = { wear: {}, messy: [] }; E.onBaby = null;
   buildStage(rt.scene, rt.steps); draw();
   try { await rt.run(r); } catch (e) { console.error(e); }
   if (!inRun(r)) return; markStep(rt.steps.length); cheer(); W.award('life', 2, 'baby' + id); W.collect('care', id + ':' + Date.now().toString(36));
@@ -6757,31 +6660,22 @@ async function play(id, fromDay) {
   $('#bcTray').innerHTML = `<button class="toy floatBtnI" style="--c:var(--green)" data-again="1"><span class="emo">🔄</span>${esc(T('Again', 'Otra vez'))}</button><button class="toy floatBtnI" style="--c:var(--purple)" data-menu="1"><span class="emo">👶</span>${esc(T('More care', 'Más cuidados'))}</button>`;
   $('#bcTray').onclick = e => { if (e.target.closest('[data-again]')) play(id); if (e.target.closest('[data-menu]')) menu(); };
 }
-const DAYKEY = () => 'babyDay_' + ((W.kid() || {}).id || 'guest'); // per child
-async function babyDay() { const r0 = ++E.run; let i = +store.get(DAYKEY(), 0) || 0; if (i >= DAY.length) i = 0; // resume where the child left off
-  const next = async () => { if (W.cur !== 'baby') return; if (i >= DAY.length) { store.set(DAYKEY(), 0); W.confetti(); say('What a wonderful day! You took care of the baby all day long. You are a super helper!', '¡Qué día tan bonito! Cuidaste al bebé todo el día. ¡Eres un súper ayudante!'); menu(); return; }
-    const [e, en, es, id] = DAY[i]; const sec = $('#s-baby'); sec.innerHTML = `<div class="dayCard"><div class="dayTrack">${DAY.map((d, k) => `<span class="${k < i ? 'done' : k === i ? 'now' : ''}"><span class="emo">${d[0]}</span></span>`).join('')}</div><div class="dayBig emo">${e}</div><h2>${esc(T(en, es))}</h2><button class="toy floatBtnI" style="--c:var(--green)" id="dayGo"><span class="emo">▶️</span>${esc(T('Go!', '¡Vamos!'))}</button></div>`;
-    say(en, es); await new Promise(res => $('#dayGo').onclick = res); if (W.cur !== 'baby') return; const ok = await play(id, i); if (!ok) return; i++; store.set(DAYKEY(), i); await sleep(1800); next(); };
-  next(); }
 function menu() {
   E.run++; E.cleanup.forEach(f => { try { f(); } catch (e) {} }); E.cleanup = [];
   const sec = $('#s-baby'), b = BB(); sec.style.overflowY = 'auto';
-  const names = { teeth: ['Brush Teeth', 'Cepillar dientes'], hair: ['Brush Hair', 'Peinar'], potty: ['Potty Time', 'Ir al baño'], hands: ['Wash Hands', 'Lavar manos'], dress: ['Get Dressed', 'Vestirse'], feed: ['Mealtime', 'Hora de comer'], diaper: ['Diaper Change', 'Cambiar pañal'], booboo: ['Boo-boo Care', 'Curar raspón'], soothe: ['Calm the Baby', 'Calmar al bebé'], bedtime: ['Bedtime', 'Hora de dormir'] };
+  const names = { teeth: ['Brush Teeth', 'Cepillar dientes'], hair: ['Brush Hair', 'Peinar'], shoes: ['Put On Shoes', 'Ponerse los zapatos'] };
   sec.innerHTML = `<div class="bcHead"><div class="bcPick">${BABIES.map(x => `<button class="bcBaby ${x.id === b.id ? 'on' : ''}" data-b="${x.id}"><span class="mini">${(babyId = x.id, babySVG({ face: 'smile', messy: [] }))}</span><b>${esc(x.name)}</b></button>`).join('')}</div></div>
-    <button class="toy dayBtn" style="--c:#FF8A5B" id="bcDay"><span class="emo">🌈</span><b>${esc(T("Baby's Whole Day", 'Todo el día del bebé'))}</b><small>${(() => { const k = +store.get(DAYKEY(), 0) || 0; return k > 0 && k < DAY.length ? esc(T('Keep going!', '¡Sigue!')) + ' ' + k + ' / ' + DAY.length : esc(T('9 routines, morning to night', '9 rutinas, de la mañana a la noche')); })()}</small></button>
     <div class="acts">${Object.keys(names).map(k => `<button class="toy actCard" style="--c:#FF6FB1" data-r="${k}"><span class="emo">${R[k].e}</span><b>${esc(T(names[k][0], names[k][1]))}</b><small>${R[k].steps.map(s => s.icon).join(' ')}</small></button>`).join('')}</div>`;
   babyId = b.id;
   sec.onclick = e => { const p = e.target.closest('[data-b]'); if (p) { babyId = p.dataset.b; store.set('baby', babyId); W.sfx.pop(); say(`Hi, ${BB().name}!`, `¡Hola, ${BB().name}!`); menu(); return; }
-    if (e.target.closest('#bcDay')) { sec.style.overflowY = ''; W.sfx.pop(); babyDay(); return; }
     const a = e.target.closest('[data-r]'); if (a) { sec.style.overflowY = ''; W.sfx.pop(); play(a.dataset.r); } };
 }
 W.addSection('baby');
 W.addWorld({ id: 'care', e: '👶', c: '#FF6FB1', acts: [] }, { en: 'Baby Care', es: 'Cuidar al bebé', fr: 'Prendre soin de bébé', pt: 'Cuidar do bebê', zh: '照顾宝宝', hi: 'बच्चे की देखभाल', ar: 'رعاية الطفل', de: 'Babypflege' }, 2);
-const ACTS = [['babymenu', '👶', ['Take Care of Baby', 'Cuidar al bebé']], ['babyday', '🌈', ["Baby's Whole Day", 'Todo el día del bebé']], ['babyteeth', '🪥', ['Brush Teeth', 'Cepillar dientes']], ['babypotty', '🚽', ['Potty Time', 'Ir al baño']], ['babyhands', '🧼', ['Wash Hands', 'Lavar manos']], ['babydress', '👕', ['Get Dressed', 'Vestirse']], ['babyfeed', '🥣', ['Mealtime', 'Hora de comer']], ['babyhair', '🪮', ['Brush Hair', 'Peinar']], ['babydiaper', '🧷', ['Diaper Change', 'Cambiar pañal']], ['babybooboo', '🩹', ['Boo-boo Care', 'Curar raspón']], ['babysoothe', '🤱', ['Calm the Baby', 'Calmar al bebé']], ['babybedtime', '🌙', ['Bedtime', 'Hora de dormir']]];
+const ACTS = [['babymenu', '👶', ['Take Care of Baby', 'Cuidar al bebé']], ['babyteeth', '🪥', ['Brush Teeth', 'Cepillar dientes']], ['babyhair', '🪮', ['Brush Hair', 'Peinar']], ['babyshoes', '👟', ['Put On Shoes', 'Ponerse los zapatos']]];
 W.addActs('care', ACTS.map(([id, e]) => [id, e, 'tiny', 1, 'life']), Object.fromEntries(ACTS.map(([id, , n]) => [id, Object.fromEntries(Object.keys(W.I18N).map(l => [l, W.trL(l, n[0], n[1])]))])), 'baby');
-W.addActs('care', [['bath', '🛁', 'tiny', 1, 'life']]);
 W.screens.baby = {
-  enter(p) { const a = p.act || 'babymenu'; $('#s-baby').style.overflowY = ''; if (a === 'babymenu') return menu(); if (a === 'babyday') return babyDay(); play(a.replace('baby', '')); },
+  enter(p) { const a = p.act || 'babymenu'; $('#s-baby').style.overflowY = ''; if (a === 'babymenu') return menu(); const id = a.replace('baby', ''); if (!R[id]) return menu(); play(id); },
   leave() { E.run++; E.cleanup.forEach(f => { try { f(); } catch (e) {} }); E.cleanup = []; $$('.bcTool').forEach(t => t.remove()); }
 };
 })();
@@ -6831,14 +6725,6 @@ add('teethbear', '🪥', ['Bear Brushes His Teeth', 'Oso se cepilla los dientes'
   { bg: 'css:bath', a: ['🐻 50,70 34 shake', '🪥 56,52 12 wiggle', '🫧 40,46 6 float', '🫧 60,40 5 float 0.4'], fx: 'bubbles', t: ['Brush, brush, brush! Round and round, top and bottom, front and back.', '¡Cepilla, cepilla! En círculos, arriba y abajo, adelante y atrás.'] },
   { bg: 'css:bath', a: ['🐻 50,70 34', '🥛 66,62 10 pop', '💧 52,52 6 float'], t: ['Swish the water, then spit. Ptooey!', 'Enjuaga con agua y escupe. ¡Ptu!'] },
   { bg: 'rainbow', a: ['🐻 50,70 34 hop', '✨ 50,46 10 spin'], fx: 'sparkle', t: ['Sparkly clean! Bruno brushes every morning and every night. Do you? The end.', '¡Limpios y brillantes! Bruno se cepilla cada mañana y cada noche. ¿Y tú? Fin.'] }]);
-add('pottyleo', '🚽', ['Leo the Potty Hero', 'Leo, el héroe del baño'], '#1FBFCB', [
-  { bg: 'meadow', a: ['🦁 40,74 26 bob', '⚽ 70,84 10 bob'], t: ['Leo the lion cub was playing ball. Suddenly, he felt a funny feeling in his tummy.', 'Leo el leoncito jugaba a la pelota. De pronto, sintió algo raro en la pancita.'] },
-  { bg: 'meadow', a: ['🦁 40,74 26 wiggle', '💭 54,44 14 pop', '🚽 54,42 8 pop 0.4'], t: ['That feeling means: I need to go potty! Leo stopped playing right away.', 'Esa sensación significa: ¡necesito ir al baño! Leo dejó de jugar enseguida.'] },
-  { bg: 'css:bath', a: ['🦁 10,74 24 >40,74 walk', '🚽 72,72 24'], t: ['He walked to the bathroom, pulled down his pants, and sat on the potty.', 'Caminó al baño, se bajó los pantalones y se sentó en el baño.'], tap: [1, ['Tap the potty!', '¡Toca el baño!']] },
-  { bg: 'css:bath', a: ['🚽 60,72 24', '🦁 60,62 20 bob', '📖 36,70 10 pop'], t: ['He waited, and read a little book. Tinkle, tinkle!', 'Esperó y leyó un librito. ¡Pipí!'] },
-  { bg: 'css:bath', a: ['🧻 30,60 12 wiggle', '🚽 60,72 24 spin', '🌀 60,62 10 spin'], t: ['Wipe, flush, whoosh!', '¡Limpiarse, jalar la cadena, fiuuu!'] },
-  { bg: 'css:bath', a: ['🦁 40,70 24', '🧼 60,56 10 wiggle', '🫧 56,46 6 float'], fx: 'bubbles', t: ['Then he washed his hands with soap and sang a song.', 'Luego se lavó las manos con jabón y cantó una canción.'] },
-  { bg: 'rainbow', a: ['🦁 50,70 30 hop', '⭐ 30,30 10 spin', '⭐ 70,26 8 spin 0.3', '🏅 50,40 12 pop 0.6'], fx: 'confetti', t: ['Leo got a gold star! He is a potty hero, and you can be one too. The end.', '¡Leo ganó una estrella dorada! Es un héroe del baño, y tú también puedes serlo. Fin.'] }]);
 add('goodnight', '🌙', ['Goodnight, Farm', 'Buenas noches, granja'], '#3B3F8F', [
   { bg: 'sunset', a: ['🐄 20,76 20 bob', '🐖 50,80 16 bob 0.3', '🐔 76,80 12 bob 0.6'], t: ['The sun is going down on the farm. It is almost bedtime.', 'El sol se esconde en la granja. Ya casi es hora de dormir.'] },
   { bg: 'sunset', a: ['🐄 40,74 26 sleep', '💤 52,50 8 float'], t: ['Goodnight, Cow. Moo, moo, sleep tight.', 'Buenas noches, Vaca. Muu, muu, duerme bien.'], tap: [0, ['Tap Cow to tuck her in!', '¡Toca a Vaca para arroparla!']] },
@@ -7198,7 +7084,7 @@ const name = (L, id) => W.actName(L, id);
 const open0 = W.open;
 W.open = act => { const k = W.kid(); if (k && findAct(act)) { const r = k.progress.recent = (k.progress.recent || []).filter(x => x !== act); r.unshift(act); k.progress.recent = r.slice(0, 12); W.saveState(); } return open0(act); };
 
-const NEW = [['dinomuseum', '🦖'], ['island', '🏝️'], ['babyday', '🌈'], ['stories', '🎬'], ['music', '🎹'], ['dinodig', '⛏️'], ['babypotty', '🚽'], ['dinohatch', '🥚']];
+const NEW = [['dinomuseum', '🦖'], ['island', '🏝️'], ['stories', '🎬'], ['music', '🎹'], ['dinodig', '⛏️'], ['babyshoes', '👟'], ['dinohatch', '🥚']];
 let homeScene = null;
 function sceneForNow() { const h = new Date().getHours(); return h >= 19 || h < 6 ? 'night' : h >= 17 ? 'sunset' : 'meadow'; }
 const tile = (a, cls = '') => { const H = W.H(), S2 = W.sec(); return `<button class="qtile ${cls}" style="--c:${a.w.c}" data-a="${a.id}"><span class="emo">${a.e}</span><b>${esc(name(H, a.id))}</b>${S2 ? `<small>${esc(name(S2, a.id))}</small>` : ''}</button>`; };
@@ -7235,7 +7121,7 @@ function render() {
   const H = W.H(), S2 = W.sec(), el = $('#s-allgames'), q = AG.q.trim().toLowerCase();
   const list = uniq(allActs()).filter(a => (AG.world === 'all' || a.w.id === AG.world) && (AG.skill === 'all' || a.skill === AG.skill) && (!q || [name(H, a.id), S2 ? name(S2, a.id) : '', W.worldName(H, a.w.id), a.id].join(' ').toLowerCase().includes(q)));
   const chip = (k, v, e, lab, c) => `<button class="chip ${AG[k] === v ? 'on' : ''}" style="--c:${c || '#22304D'}" data-k="${k}" data-v="${v}"><span class="emo">${e}</span>${esc(lab)}</button>`;
-  el.innerHTML = `<div class="agSearch"><span class="emo">🔎</span><input type="text" id="agQ" placeholder="${esc(T('Search: dino, piano, potty, story…', 'Buscar: dino, piano, baño, cuento…'))}" value="${esc(AG.q)}" autocomplete="off"></div>
+  el.innerHTML = `<div class="agSearch"><span class="emo">🔎</span><input type="text" id="agQ" placeholder="${esc(T('Search: dino, piano, teeth, story…', 'Buscar: dino, piano, dientes, cuento…'))}" value="${esc(AG.q)}" autocomplete="off"></div>
     <div class="chips">${chip('world', 'all', '🌍', T('All worlds', 'Todos'))}${W.WORLDS.map(w => chip('world', w.id, w.e, W.worldName(H, w.id), w.c)).join('')}</div>
     <div class="chips" style="padding-top:0">${chip('skill', 'all', '⭐', T('All skills', 'Todas'))}${W.SKILLS.map(s => chip('skill', s, { reading: '🔤', math: '🔢', thinking: '🧠', science: '🔬', feelings: '💖', creativity: '🎨', languages: '🌍', life: '🧸' }[s], W.skillName(s), W.SKILL_C[s])).join('')}</div>
     <div class="agCount">${list.length} ${esc(T('games', 'juegos'))}</div>
@@ -7273,12 +7159,8 @@ const BLURB = {
   dinohatch: ['Tap the eggs to hatch babies', 'Toca los huevos para que nazcan'], dinodinner: ['Plants, meat or fish?', '¿Plantas, carne o peces?'],
   dinosize: ['Who is bigger? Who is smaller?', '¿Quién es más grande?'], dinoquiz: ['Answer questions, earn stars', 'Responde y gana estrellas'],
   dinotime: ['Travel back millions of years', 'Viaja millones de años atrás'], dinostickers: ['Every dino you have found', 'Todos los dinos que encontraste'],
-  babymenu: ['Pick a baby and a job', 'Elige un bebé y una tarea'], babyday: ['Morning to bedtime, step by step', 'De la mañana a la noche'],
-  babyteeth: ['Toothpaste, brush, rinse', 'Pasta, cepillo, enjuague'], babypotty: ['Potty, wipe, flush, wash hands', 'Baño, papel, cadena, manos'],
-  babyhands: ['Soap, scrub, rinse, dry', 'Jabón, frota, enjuaga, seca'], babydress: ['Pick clothes for the weather', 'Ropa según el clima'],
-  babyfeed: ['A healthy plate and a drink', 'Un plato sano y una bebida'], babyhair: ['Gently comb and add a bow', 'Peina con cuidado'],
-  babydiaper: ['Clean diaper, happy baby', 'Pañal limpio, bebé feliz'], babybooboo: ['Clean it, bandage it, hug', 'Limpia, venda y abraza'],
-  babysoothe: ['Rock, sing and cuddle', 'Mece, canta y abraza'], babybedtime: ['Pajamas, story, lights out', 'Pijama, cuento y a dormir'],
+  babymenu: ['Pick a baby and a job', 'Elige un bebé y una tarea'],
+  babyteeth: ['Toothpaste, brush, rinse', 'Pasta, cepillo, enjuague'], babyhair: ['Gently comb and add a bow', 'Peina con cuidado'], babyshoes: ['Socks, shoes, tie the laces', 'Calcetines, zapatos y cordones'],
   bath: ['Bubbles, ducks and splashing', 'Burbujas, patitos y agua'],
   abc: ['Letters with words and pictures', 'Letras con palabras y dibujos'], trace: ['Draw letters with your finger', 'Dibuja letras con el dedo'],
   firstsound: ['Which picture starts with…?', '¿Qué dibujo empieza con…?'], stories: ['Animated stories read aloud', 'Cuentos animados para escuchar'],
