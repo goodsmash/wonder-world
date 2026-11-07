@@ -538,15 +538,58 @@ body[data-screen=bath] #caption{top:auto;bottom:calc(env(safe-area-inset-bottom,
 .bsKid{display:flex;align-items:flex-end}.bsKid .emo{font-size:clamp(20px,5vh,48px)}
 .choice.dq .dinoSvg{width:92%;max-height:70%}
 /* time machine */
-.tmStage{position:relative;flex:1;min-height:0;border-radius:28px;overflow:hidden;box-shadow:0 10px 24px rgba(34,48,77,.15)}
-.tmActors{position:absolute;inset:0;z-index:2}
-.tmDino{position:absolute;left:0;top:0;will-change:transform;filter:drop-shadow(0 10px 8px rgba(0,0,0,.2))}
-.tmDino .dinoSvg{display:block}
-.tmDino{translate:0 -72%;padding:0;background:none}
-.tmSign{position:absolute;z-index:3;top:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.9);border-radius:18px;padding:6px 18px;text-align:center}
-.tmSign b{display:block;font-family:var(--display);font-size:clamp(22px,3.4vw,36px);line-height:1.05}.tmSign small{color:var(--ink2)}
-.tmBar{display:flex;gap:8px;overflow-x:auto;flex:none;align-items:center;scrollbar-width:none;padding:2px}.tmBar::-webkit-scrollbar{display:none}
-.tmGo{height:56px;padding:0 18px;border-radius:18px;font-family:var(--display);font-size:20px;display:flex;align-items:center;gap:8px;margin-left:auto;flex:none}
+.tmWrap{display:grid;grid-template-columns:minmax(0,1fr) clamp(260px,27vw,360px);grid-template-rows:auto minmax(0,1fr);gap:12px;flex:1 1 auto;min-height:0;width:100%}
+.tmLine{grid-column:1/-1;display:flex;align-items:center;gap:8px;background:#fff;border:var(--bw,3px) solid var(--line,#2B2340);border-radius:20px;padding:8px 10px;box-shadow:var(--hard,0 4px 0 #2B2340)}
+.tmNav{flex:none;width:44px;height:44px;border-radius:14px;background:var(--paper,#FFF8EC);border:2px solid var(--line,#2B2340);font-size:18px;color:var(--ink,#2B2340)}
+.tmNav:active{transform:translateY(2px)}
+.tmTrack{flex:1;min-width:0}
+.tmBarS{display:flex;gap:2px;height:40px;padding-top:2px}
+.tmSeg{position:relative;min-width:16px;flex-basis:0;background:color-mix(in srgb,var(--c) 30%,#fff);border:0;border-radius:6px;padding:0 4px;font:600 12px/1 var(--body,system-ui);color:var(--ink,#2B2340);overflow:visible;transition:background .2s}
+.tmSeg span{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tmSeg.on{background:var(--c);color:#fff;box-shadow:inset 0 0 0 2px var(--line,#2B2340)}
+.tmSeg.on span{text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.tmSeg:last-child span{display:none}
+.tmHere{position:absolute;top:-7px;width:0;height:0;border:7px solid transparent;border-top-color:var(--line,#2B2340);transform:translateX(-50%);pointer-events:none}
+.tmScale{display:flex;justify-content:space-between;font-size:11px;color:var(--ink2,#5B5470);margin-top:4px;gap:6px}
+.tmScale span:nth-child(2){font-style:italic;opacity:.8}
+.tmStage{position:relative;min-height:0;border-radius:22px;overflow:hidden;border:var(--bw,3px) solid var(--line,#2B2340);background:#cfe0e8;isolation:isolate}
+.tmBg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tmSun{position:absolute;left:74%;top:8%;width:11%;aspect-ratio:1;border-radius:50%;pointer-events:none}
+.tmPl{position:absolute;transform:translateX(-50%);pointer-events:none}
+.tmPl svg{display:block;width:100%;height:auto;overflow:visible}
+.tmWaterFront{position:absolute;left:0;right:0;bottom:0;z-index:870;pointer-events:none}
+.tmBubble{position:absolute;bottom:-10px;width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.55);z-index:600;animation:tmBub linear infinite;pointer-events:none}
+@keyframes tmBub{to{transform:translateY(-110vh) translateX(12px)}}
+.tmActors{position:absolute;inset:0;z-index:4}
+.tmDino{position:absolute;left:0;top:0;will-change:transform;padding:0;background:none;border:0;translate:-50% -96%}
+.tmDino.z-sea .dinoSvg path[fill="#7FC8F0"],.tmDino.z-sea .dinoSvg>ellipse:first-child,.tmDino.z-sky .dinoSvg>ellipse:first-child{display:none}
+.tmDino .emo{filter:drop-shadow(0 5px 3px rgba(30,30,40,.25))}
+.tmDino.z-sea{translate:-50% -60%;filter:none}.tmDino.z-sky{translate:-50% -50%;filter:drop-shadow(0 14px 6px rgba(30,30,40,.12))}.tmDino.z-floor{translate:-50% -90%}
+.tmDino>svg,.tmDino .dinoSvg{display:block;width:100%;height:auto}
+.tmDino{container-type:inline-size;min-width:40px;min-height:40px}.tmDino .emo{display:block;font-size:84cqw;line-height:1.1;text-align:center}
+.tmDino.meet{animation:tmMeet .9s ease-out}
+@keyframes tmMeet{0%{filter:drop-shadow(0 0 0 #fff)}30%{filter:drop-shadow(0 0 10px #fff) drop-shadow(0 0 4px var(--c))}100%{filter:drop-shadow(0 6px 4px rgba(30,30,40,.22))}}
+.tmSign{position:absolute;z-index:990;top:12px;left:12px;background:rgba(255,255,255,.92);border:2px solid var(--line,#2B2340);border-radius:14px;padding:6px 14px;pointer-events:none}
+.tmSign b{display:block;font-family:var(--display);font-size:clamp(20px,2.8vw,30px);line-height:1.05}.tmSign small{color:var(--ink2);font-size:13px}
+.tmWarp{position:absolute;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(20,24,40,.55);backdrop-filter:blur(6px);color:#fff;animation:tmFade .25s ease-out}
+.tmWarp b{font-family:var(--display);font-size:clamp(44px,9vw,96px);line-height:1;font-variant-numeric:tabular-nums}.tmWarp small{font-size:clamp(14px,2vw,20px);opacity:.9}
+@keyframes tmFade{from{opacity:0}}
+.tmNotes{min-height:0;overflow-y:auto;background:#fff;border:var(--bw,3px) solid var(--line,#2B2340);border-radius:22px;padding:14px 14px 16px;display:flex;flex-direction:column;gap:10px}
+.tmKick{margin:0;font-size:12px;font-weight:700;color:var(--ink2,#5B5470);border-left:5px solid var(--c);padding-left:8px}
+.tmNotes h3{margin:0;font-family:var(--display);font-size:clamp(20px,2.2vw,26px);line-height:1.1}
+.tmFacts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.tmFact{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--paper,#FFF8EC);border:2px solid transparent;border-radius:14px;padding:8px 10px;font:inherit;font-size:14px;line-height:1.35;color:var(--ink,#2B2340)}
+.tmFact .emo{font-size:20px;line-height:1.2;flex:none}.tmFact b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2,#5B5470)}
+.tmFact.on{border-color:var(--line,#2B2340);background:#fff}
+.tmWho{display:flex;justify-content:space-between;align-items:baseline;border-top:2px dashed color-mix(in srgb,var(--line,#2B2340) 25%,transparent);padding-top:10px}
+.tmWho span{font-weight:700;color:var(--ink2,#5B5470)}
+.tmRoster{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px}
+.tmChip{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--paper,#FFF8EC);border:2px solid transparent;border-radius:14px;padding:6px 4px;font-size:12px;line-height:1.15;color:var(--ink,#2B2340);position:relative}
+.tmChip>svg,.tmChip .dinoSvg{width:64px;height:40px}.tmChip .emo{font-size:28px;line-height:40px}
+.tmChip span:last-child{text-align:center;overflow-wrap:anywhere}
+.tmChip.got{border-color:var(--green,#3FA35C);background:#fff}.tmChip.got::after{content:'✓';position:absolute;top:2px;right:6px;color:var(--green,#3FA35C);font-weight:800}
+@media (max-width:760px){.tmWrap{grid-template-columns:1fr;grid-template-rows:auto auto auto;flex:none}.tmStage{aspect-ratio:1/1;max-height:62vh}.tmNotes{overflow:visible}.tmScale span:nth-child(2){display:none}.tmSeg{font-size:0}.tmSeg span{display:none}}
+@media (prefers-reduced-motion:reduce){.tmBubble{animation:none;display:none}}
 
 /* ===== Baby Care ===== */
 .bcSteps{display:flex;align-items:center;justify-content:center;gap:4px;flex:none;flex-wrap:wrap}
@@ -6582,24 +6625,214 @@ function startQuiz() {
     sayP(['Yes!', '¡Sí!'], [`${d.name}!`, `¡${d.name}!`], done && ['Five stars!', '¡Cinco estrellas!'], done && ['You are a dino expert!', '¡Eres experto en dinosaurios!']).then(() => setTimeout(() => { if (W.cur === 'dino' && W.params.act === 'dinoquiz') startQuiz(); }, 500)); };
 }
 
-/* ---------- time machine: travel through the ages and watch who lived then ---------- */
-const TM = { era: 0 };
-const TM_ERAS = [['T', 'sunset', 230, 'The Triassic: the very first dinosaurs appear.', 'El Triásico: aparecen los primeros dinosaurios.'], ['J', 'jungle', 150, 'The Jurassic: giant long-necks and plated dinosaurs.', 'El Jurásico: cuellos largos gigantes y dinosaurios con placas.'], ['K', 'forest', 70, 'The Cretaceous: T. rex, Triceratops and flowers!', 'El Cretácico: ¡T. rex, tricerátops y flores!'], ['Q', 'snow', .02, 'The Ice Age: mammoths in the snow. The dinosaurs are gone, but birds are their grandchildren!', 'La Edad de Hielo: mamuts en la nieve. Los dinosaurios ya no están, ¡pero las aves son sus nietos!']];
-let tmRaf = 0;
-function startTime() {
-  const el = $('#s-dino'); el.style.overflowY = ''; const E = TM_ERAS[TM.era], cast = shuffle(D.filter(d => d.era === E[0] || (E[0] === 'Q' && (d.group === 'ice' || d.group === 'after')))).slice(0, 6);
-  el.innerHTML = `<div class="tmStage" id="tmStage"><canvas class="bgscene" id="tmScene"></canvas><div class="tmActors" id="tmA"></div><div class="tmSign"><b>${esc((e => T(e[1], e[2]))(W.DINO_ERAS.find(e => e[0] === E[0])))}</b><small>${E[2] >= 1 ? E[2] + ' ' + esc(T('million years ago', 'millones de años atrás')) : esc(T('20 thousand years ago', 'hace 20 mil años'))}</small></div></div>
-    <div class="tmBar">${TM_ERAS.map((e, i) => `<button class="scbtn ${i === TM.era ? 'on' : ''}" data-e="${i}"><span class="emo">${['🌋', '🌴', '🌸', '🧊'][i]}</span>${esc((x => T(x[1], x[2]))(W.DINO_ERAS.find(x => x[0] === e[0])))}</button>`).join('')}<button class="toy tmGo" style="--c:var(--purple)" id="tmGo"><span class="emo">🚀</span>${esc(T('Time travel!', '¡Viajar en el tiempo!'))}</button></div>`;
-  const sc = new W.Scene($('#tmScene'), E[1]).start(); TM.scene = sc;
-  const box = $('#tmA'); const actors = cast.map((d, i) => { const n = document.createElement('button'); n.className = 'tmDino'; n.innerHTML = svg(d); const w = d.group === 'fly' ? 13 : clamp(8 + Math.log2(d.len + 1) * 5, 10, 30); n.style.width = w + '%'; box.append(n);
-    const o = { d, n, x: Math.random() * 90, y: d.group === 'fly' ? 8 + Math.random() * 20 : 52 + Math.random() * 26, v: (Math.random() < .5 ? -1 : 1) * (2 + Math.random() * 3), p: Math.random() * 6 }; n.onclick = () => { W.dinoRoar(d); W.react(n.firstElementChild, 'jump'); o.v *= -1; found(d, true); sayP([`${d.name}!`, `¡${d.name}!`], d.fact); if (!o.awarded) { o.awarded = true; W.award('science', 1, 'dinotime'); } }; return o; });
-  let last = 0; cancelAnimationFrame(tmRaf); const step = t => { if (!box.isConnected) return; const dt = Math.min(.05, (t - (last || t)) / 1000); last = t;
-    for (const o of actors) { o.x += o.v * dt; if (o.x < -5) o.v = Math.abs(o.v); if (o.x > 92) o.v = -Math.abs(o.v); const bob = Math.sin(t / 180 + o.p) * (o.d.group === 'fly' ? 1.4 : .5); o.n.style.transform = `translate(${o.x * box.clientWidth / 100}px, ${(o.y + bob) * box.clientHeight / 100}px) scaleX(${o.v < 0 ? -1 : 1})`; o.n.style.zIndex = Math.round(o.y); }
-    tmRaf = requestAnimationFrame(step); }; tmRaf = requestAnimationFrame(step);
-  sayT(E[3], E[4]);
-  el.querySelector('.tmBar').onclick = e => { const b = e.target.closest('button'); if (!b) return; if (b.id === 'tmGo') { TM.era = (TM.era + 1) % TM_ERAS.length; } else TM.era = +b.dataset.e; travel(); };
+/* ---------- time machine: a real, to-scale geologic timeline; each stop is a diorama with that era's land, plants, sea, sky and animals, plus field notes ---------- */
+const TM = { era: 3, seen: new Set() };
+const TM_ERAS = [
+  { c: 'D', a: 419, b: 359, at: 380, s: 'sea', col: '#7A6AA0', name: ['Devonian', 'Devónico'], nick: ['The Age of Fishes', 'La Era de los Peces'],
+    land: ['Two big continents: Gondwana in the south and Euramerica near the equator.', 'Dos grandes continentes: Gondwana al sur y Euramérica cerca del ecuador.'],
+    clim: ['Warm, with shallow seas covering much of the land.', 'Cálido, con mares poco profundos que cubrían gran parte de la tierra.'],
+    plant: ['The first trees and forests grew on land.', 'En la tierra crecieron los primeros árboles y bosques.'],
+    life: ['Armored fish, early sharks, trilobites and ammonoids filled the seas.', 'Peces acorazados, los primeros tiburones, trilobites y amonoideos llenaban los mares.'],
+    event: ['Fish with leg-like fins, like Tiktaalik, began crawling out of the water.', 'Peces con aletas parecidas a patas, como Tiktaalik, empezaron a salir del agua.'],
+    ex: [{ id: 'xshark', e: '🦈', z: 'sea', w: 12, n: ['Early shark', 'Tiburón primitivo'], f: ['Sharks were already swimming here, long before the dinosaurs.', 'Los tiburones ya nadaban aquí, mucho antes que los dinosaurios.'] },
+      { id: 'xtrilo', art: 'trilo', z: 'floor', w: 9, n: ['Trilobite', 'Trilobites'], f: ['Trilobites had hard shells and many legs. They lived for about 270 million years!', 'Los trilobites tenían caparazón duro y muchas patas. ¡Vivieron unos 270 millones de años!'] },
+      { id: 'xammo', art: 'ammo', z: 'sea', w: 9, n: ['Ammonoid', 'Amonoideo'], f: ['Ammonoids had coiled shells and tentacles, like a squid living in a snail shell.', 'Los amonoideos tenían concha enrollada y tentáculos, como un calamar dentro de una concha de caracol.'] },
+      { id: 'xfish', e: '🐟', z: 'sea', w: 6, n: ['Lobe-finned fish', 'Pez de aletas lobuladas'], f: ['Lobe-finned fish had fleshy fins. Their relatives became the first animals with legs.', 'Estos peces tenían aletas carnosas. Sus parientes fueron los primeros animales con patas.'] }] },
+  { c: 'Cb', a: 359, b: 299, at: 310, s: 'swamp', col: '#5E8C6A', name: ['Carboniferous', 'Carbonífero'], nick: ['The Coal Forests', 'Los Bosques de Carbón'],
+    land: ['The continents were crashing together to make one supercontinent, Pangaea.', 'Los continentes chocaban entre sí para formar un solo supercontinente: Pangea.'],
+    clim: ['Warm, wet swamps near the equator, and ice at the South Pole.', 'Pantanos cálidos y húmedos cerca del ecuador, y hielo en el Polo Sur.'],
+    plant: ['Giant club mosses and horsetails as tall as trees. Their remains became the coal we dig up today.', 'Licopodios y colas de caballo tan altos como árboles. Sus restos se convirtieron en el carbón que extraemos hoy.'],
+    life: ['Giant insects and the very first reptiles. The air had more oxygen than today.', 'Insectos gigantes y los primeros reptiles. El aire tenía más oxígeno que hoy.'],
+    event: ['The first eggs with shells appeared, so animals no longer needed water to lay them.', 'Aparecieron los primeros huevos con cáscara, así los animales ya no necesitaban agua para ponerlos.'],
+    ex: [{ id: 'xdragon', art: 'dragon', z: 'sky', w: 11, n: ['Meganeura', 'Meganeura'], f: ['Meganeura was a dragonfly with wings about 70 centimeters across, one of the biggest insects ever.', 'Meganeura era una libélula con alas de unos 70 centímetros, uno de los insectos más grandes de la historia.'] },
+      { id: 'xmilli', art: 'milli', z: 'land', w: 16, n: ['Arthropleura', 'Arthropleura'], f: ['Arthropleura was a millipede longer than a bed: up to 2.6 meters!', 'Arthropleura era un milpiés más largo que una cama: ¡hasta 2,6 metros!'] },
+      { id: 'xhylo', e: '🦎', z: 'land', w: 5, n: ['Hylonomus', 'Hylonomus'], f: ['Hylonomus was one of the first reptiles. It was about as long as a pencil.', 'Hylonomus fue uno de los primeros reptiles. Medía más o menos lo que un lápiz.'] }] },
+  { c: 'P', a: 299, b: 252, at: 280, s: 'desert', col: '#B5654A', name: ['Permian', 'Pérmico'], nick: ['One Giant Continent', 'Un continente gigante'],
+    land: ['Almost all land was joined into one supercontinent, Pangaea.', 'Casi toda la tierra estaba unida en un supercontinente: Pangea.'],
+    clim: ['The middle of Pangaea was hot and very dry, with big deserts.', 'El centro de Pangea era caluroso y muy seco, con grandes desiertos.'],
+    plant: ['Conifers and seed ferns, which could live in drier places.', 'Coníferas y helechos con semillas, que podían vivir en lugares más secos.'],
+    life: ['Dimetrodon was not a dinosaur. It was a closer relative of mammals, and of you!', 'Dimetrodon no era un dinosaurio. Era pariente más cercano de los mamíferos, ¡y de ti!'],
+    event: ['It ended with the Great Dying, the biggest extinction ever: about 9 of every 10 sea species vanished.', 'Terminó con la Gran Mortandad, la mayor extinción de la historia: desaparecieron unas 9 de cada 10 especies marinas.'],
+    ex: [{ id: 'xbeetle', e: '🪲', z: 'land', w: 4, n: ['Beetle', 'Escarabajo'], f: ['The first beetles appeared in the Permian. Today there are more kinds of beetle than of any other animal!', 'Los primeros escarabajos aparecieron en el Pérmico. ¡Hoy hay más tipos de escarabajo que de cualquier otro animal!'] },
+      { id: 'xlizard', e: '🦎', z: 'land', w: 5, n: ['Small reptile', 'Reptil pequeño'], f: ['Small reptiles scurried between the rocks, hiding from the heat.', 'Pequeños reptiles corrían entre las rocas para esconderse del calor.'] }] },
+  { c: 'T', a: 252, b: 201, at: 230, s: 'dry', col: '#D9893B', name: ['Triassic', 'Triásico'], nick: ['The First Dinosaurs', 'Los primeros dinosaurios'],
+    land: ['Pangaea was still one supercontinent, so animals could walk almost anywhere.', 'Pangea seguía siendo un supercontinente, así que los animales podían caminar casi a cualquier parte.'],
+    clim: ['Hot and dry, with no ice at the poles.', 'Caluroso y seco, sin hielo en los polos.'],
+    plant: ['Conifers, cycads and ferns. There was no grass and no flowers yet.', 'Coníferas, cícadas y helechos. Todavía no había hierba ni flores.'],
+    life: ['The first dinosaurs, the first flying pterosaurs and the first mammals all appeared.', 'Aparecieron los primeros dinosaurios, los primeros pterosaurios voladores y los primeros mamíferos.'],
+    event: ['Many early dinosaurs were small and quick, running on two legs.', 'Muchos de los primeros dinosaurios eran pequeños y rápidos, y corrían en dos patas.'],
+    ex: [{ id: 'xmouse', e: '🐁', z: 'land', w: 4, n: ['First mammals', 'Primeros mamíferos'], f: ['The first mammals were tiny and furry, about the size of a mouse.', 'Los primeros mamíferos eran diminutos y peludos, del tamaño de un ratón.'] }] },
+  { c: 'J', a: 201, b: 145, at: 150, s: 'lush', col: '#3FA35C', name: ['Jurassic', 'Jurásico'], nick: ['The Age of Giants', 'La Era de los Gigantes'],
+    land: ['Pangaea began to split in two: Laurasia in the north and Gondwana in the south.', 'Pangea empezó a dividirse en dos: Laurasia al norte y Gondwana al sur.'],
+    clim: ['Warm and humid, with lots of rain.', 'Cálido y húmedo, con mucha lluvia.'],
+    plant: ['Forests of conifers, ginkgos, cycads and tree ferns.', 'Bosques de coníferas, ginkgos, cícadas y helechos arborescentes.'],
+    life: ['Huge long-necked sauropods, plated Stegosaurus and big hunters like Allosaurus.', 'Enormes saurópodos de cuello largo, Stegosaurus con placas y grandes cazadores como Allosaurus.'],
+    event: ['The first birds, like Archaeopteryx, appeared. Birds are living dinosaurs!', 'Aparecieron las primeras aves, como Archaeopteryx. ¡Las aves son dinosaurios vivos!'],
+    ex: [{ id: 'xturtle', e: '🐢', z: 'sea', w: 6, n: ['Turtle', 'Tortuga'], f: ['Turtles were already swimming in Jurassic lakes and seas.', 'Las tortugas ya nadaban en los lagos y mares del Jurásico.'] }] },
+  { c: 'K', a: 145, b: 66, at: 70, s: 'bloom', col: '#2E95F0', name: ['Cretaceous', 'Cretácico'], nick: ['Flowers and T. rex', 'Flores y T. rex'],
+    land: ['The continents drifted apart, and the Atlantic Ocean grew wider.', 'Los continentes se separaron y el océano Atlántico se hizo más ancho.'],
+    clim: ['Warm, with high seas that flooded the middle of North America.', 'Cálido, con mares altos que inundaban el centro de Norteamérica.'],
+    plant: ['The first flowering plants bloomed, like magnolias.', 'Florecieron las primeras plantas con flores, como las magnolias.'],
+    life: ['T. rex, Triceratops, duck-billed dinosaurs and giant sea reptiles like Mosasaurus.', 'T. rex, Triceratops, dinosaurios pico de pato y reptiles marinos gigantes como Mosasaurus.'],
+    event: ['66 million years ago an asteroid hit Mexico. The big dinosaurs died out, but birds survived.', 'Hace 66 millones de años un asteroide cayó en México. Los grandes dinosaurios se extinguieron, pero las aves sobrevivieron.'],
+    ex: [{ id: 'xbee', e: '🐝', z: 'sky', w: 3.5, n: ['Bee', 'Abeja'], f: ['Bees appeared along with the first flowers and helped carry their pollen.', 'Las abejas aparecieron junto con las primeras flores y ayudaron a llevar su polen.'] }] },
+  { c: 'C', a: 66, b: 2.6, at: 58, s: 'rain', col: '#E0A040', name: ['Age of Mammals', 'Era de los mamíferos'], nick: ['After the Dinosaurs', 'Después de los dinosaurios'],
+    land: ['India crashed into Asia and pushed up the Himalayas, the tallest mountains on Earth.', 'La India chocó con Asia y levantó el Himalaya, las montañas más altas de la Tierra.'],
+    clim: ['Very hot at first, then slowly cooler and drier.', 'Muy caluroso al principio y luego, poco a poco, más fresco y seco.'],
+    plant: ['Rainforests at first; later, grasslands spread across the world.', 'Al principio, selvas; después, las praderas se extendieron por el mundo.'],
+    life: ['With the big dinosaurs gone, mammals grew big. Titanoboa was a snake as long as a bus!', 'Sin los grandes dinosaurios, los mamíferos crecieron. ¡Titanoboa era una serpiente tan larga como un autobús!'],
+    event: ['Whales come from land animals that slowly moved back into the sea.', 'Las ballenas vienen de animales terrestres que poco a poco volvieron al mar.'],
+    ex: [{ id: 'xhorse', e: '🐎', z: 'land', w: 6, n: ['Early horse', 'Caballo primitivo'], f: ['The first horses were only about as big as a fox.', 'Los primeros caballos eran apenas del tamaño de un zorro.'] },
+      { id: 'xwhale', e: '🐋', z: 'sea', w: 11, n: ['Early whale', 'Ballena primitiva'], f: ['Whales slowly changed from four-legged land animals into ocean swimmers.', 'Las ballenas cambiaron poco a poco de animales terrestres de cuatro patas a nadadoras del océano.'] }] },
+  { c: 'Q', a: 2.6, b: 0.0117, at: 0.02, s: 'ice', col: '#7FC8E8', name: ['Ice Age', 'Edad de Hielo'], nick: ['Mammoths and Ice', 'Mamuts y hielo'],
+    land: ['The sea was about 120 meters lower, so people could walk from Asia to Alaska.', 'El mar estaba unos 120 metros más bajo, así que se podía caminar de Asia a Alaska.'],
+    clim: ['Cold times came and went. Thick ice sheets covered much of North America and Europe.', 'Llegaban y se iban épocas de frío. Gruesas capas de hielo cubrían gran parte de Norteamérica y Europa.'],
+    plant: ['Cold grassy plains called the mammoth steppe, with few trees.', 'Llanuras frías de hierba, la estepa del mamut, con pocos árboles.'],
+    life: ['Woolly mammoths, sabre-toothed cats, giant ground sloths, and early humans.', 'Mamuts lanudos, tigres dientes de sable, perezosos gigantes y los primeros humanos.'],
+    event: ['People painted mammoths on cave walls. The last big ice sheets melted about 12,000 years ago.', 'Las personas pintaron mamuts en las paredes de cuevas. Las últimas grandes capas de hielo se derritieron hace unos 12.000 años.'],
+    ex: [{ id: 'xdeer', e: '🦌', z: 'land', w: 8, n: ['Giant deer', 'Ciervo gigante'], f: ['The giant deer had antlers more than 3 meters wide.', 'El ciervo gigante tenía cuernos de más de 3 metros de ancho.'] },
+      { id: 'xwolf', e: '🐺', z: 'land', w: 6, n: ['Dire wolf', 'Lobo terrible'], f: ['Dire wolves were bigger than today\'s wolves and hunted in packs.', 'Los lobos terribles eran más grandes que los lobos de hoy y cazaban en manada.'] }] }
+];
+const TMP = { // calm, era-specific palettes
+  sea: { sky: ['#3B7C98', '#173F58'], floor: ['#C8B187', '#9E8758'], l0: '#3F7D5A', l1: '#6BA36F', trunk: '#5B4A35', rock: '#56656B', coral: '#D98568' },
+  swamp: { sky: ['#B7C9AE', '#E3E8D4'], far: '#97AC90', mid: '#6F8F64', ground: ['#5F7A45', '#4A6234'], shore: '#76704E', water: ['#5E7D6A', '#3B5A4C'], l0: '#2F5A34', l1: '#4E7C45', trunk: '#5B4A35', rock: '#77736A', sun: '#FFF3D0', water_on: 1 },
+  desert: { sky: ['#E9C59C', '#F8E8D2'], far: '#C99872', mid: '#B9774F', ground: ['#C57A4E', '#A65E3A'], l0: '#4F6B3A', l1: '#6E8A4A', trunk: '#6B4A33', rock: '#8E5A42', sun: '#FFF1C9' },
+  dry: { sky: ['#EFD3A6', '#FBF1DC'], far: '#C9A67A', mid: '#B48A57', ground: ['#C9A062', '#AE8346'], shore: '#DCC59A', water: ['#7DB2BC', '#4B8A9A'], l0: '#4E6E3C', l1: '#76944F', trunk: '#6E5136', rock: '#9A7A5A', sun: '#FFF2CC', water_on: 1 },
+  lush: { sky: ['#BCDECE', '#EEF6EC'], far: '#9CC3A6', mid: '#6FA06A', ground: ['#6E9C52', '#578441'], shore: '#CBBF8E', water: ['#6FB2B9', '#3B8898'], l0: '#2E6B3E', l1: '#4F8F4E', trunk: '#5C4632', rock: '#7E8A7A', sun: '#FFF6D8', water_on: 1 },
+  bloom: { sky: ['#B9D7EB', '#F0F6F4'], far: '#9FBFC8', mid: '#86AE6C', ground: ['#8DB061', '#74974B'], shore: '#D6CB9C', water: ['#5FA4C8', '#2C74A0'], l0: '#3C7444', l1: '#5E9A55', trunk: '#5E4733', rock: '#8A8C86', sun: '#FFF6D8', flower: ['#F7ECF2', '#E59AB7'], water_on: 1 },
+  rain: { sky: ['#CBE3DB', '#F4F5E8'], far: '#9DB7B0', mid: '#7FA35E', ground: ['#9DB25A', '#859A44'], shore: '#D9CD95', water: ['#4F98BD', '#266C96'], l0: '#2F6B3C', l1: '#58934B', trunk: '#6E5638', rock: '#8B877A', sun: '#FFF4D0', water_on: 1 },
+  ice: { sky: ['#C6D9E7', '#F1F5F8'], far: '#DAE6F0', mid: '#E4EDF4', ground: ['#F4F7FA', '#DCE5ED'], l0: '#3E5E4C', l1: '#55745F', trunk: '#5A4838', rock: '#8C96A0', sun: '#FFFBEA', grass: '#C9B98A' }
+};
+const TM_PLANTS = { // [back row kinds], [front frame kinds], [ground clutter kinds], far feature
+  sea: [['weed', 'weed', 'coral', 'rock'], ['weed', 'weed'], ['coral', 'rock', 'weed'], null],
+  swamp: [['club', 'club', 'horse', 'club'], ['club', 'fern'], ['fern', 'horse'], null],
+  desert: [['conifer', 'rock', 'conifer'], ['fern', 'rock'], ['rock', 'fern'], 'volcano'],
+  dry: [['conifer', 'cycad', 'conifer', 'cycad'], ['cycad', 'fern'], ['fern', 'rock'], 'volcano'],
+  lush: [['conifer', 'tfern', 'tree', 'conifer', 'tfern'], ['tfern', 'fern'], ['fern', 'cycad'], null],
+  bloom: [['tree', 'conifer', 'tree', 'tree'], ['tree', 'fern'], ['fern', 'bush'], null],
+  rain: [['palm', 'tree', 'palm', 'tree'], ['palm', 'grass'], ['grass', 'fern'], 'mount'],
+  ice: [['pine', 'pine', 'pine'], ['pine', 'grass'], ['grass', 'rock'], 'glacier']
+};
+const tmRng = s => () => (s = (s * 16807) % 2147483647) / 2147483647;
+const frond = (x0, y0, x1, y1, cx, cy, c0, c1, w = 12) => `<path d="M${x0} ${y0}Q${cx} ${cy} ${x1} ${y1}" stroke="${c0}" stroke-width="${w}" stroke-dasharray="2 2.6" fill="none"/><path d="M${x0} ${y0}Q${cx} ${cy} ${x1} ${y1}" stroke="${c1}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+const CROWN = (x, y, c, k = 1) => [[-44, 8, -24, -20], [-36, -20, -18, -36], [-14, -38, -6, -40], [14, -38, 6, -40], [36, -20, 18, -36], [44, 8, 24, -20]].map(([ex, ey, cx, cy]) => frond(x, y, x + ex * k, y + ey * k, x + cx * k, y + cy * k, c.l0, c.l1, 12 * k)).join('');
+const PLANT = {
+  conifer: c => [60, 170, `<rect x="27" y="36" width="6" height="134" fill="${c.trunk}"/>` + [0, 1, 2, 3, 4, 5].map(i => `<ellipse cx="30" cy="${20 + i * 19}" rx="${6 + i * 4.4}" ry="7" fill="${i % 2 ? c.l1 : c.l0}"/>`).join('')],
+  cycad: c => [100, 92, `<path d="M42 92L44 52H56L58 92Z" fill="${c.trunk}"/><path d="M44 60H56M44 70H57M43 80H57" stroke="rgba(0,0,0,.18)" stroke-width="2"/>` + CROWN(50, 52, c)],
+  tfern: c => [100, 180, `<path d="M50 180C46 140 56 100 50 56" stroke="${c.trunk}" stroke-width="7" fill="none"/>` + CROWN(50, 56, c)],
+  fern: c => [100, 48, [[4, 36, 22, 16], [16, 10, 30, 4], [50, 0, 46, 10], [84, 10, 70, 4], [96, 36, 78, 16]].map(([ex, ey, cx, cy]) => frond(50, 48, ex, ey, cx, cy, c.l0, c.l1, 10)).join('')],
+  horse: c => [40, 120, [[10, 30], [20, 6], [30, 22]].map(([x, t]) => `<line x1="${x}" y1="120" x2="${x}" y2="${t}" stroke="${c.l1}" stroke-width="3.5"/><line x1="${x}" y1="118" x2="${x}" y2="${t + 6}" stroke="${c.l0}" stroke-width="9" stroke-dasharray="1.4 9" stroke-linecap="round"/>`).join('')],
+  club: c => [90, 220, `<line x1="45" y1="220" x2="45" y2="58" stroke="${c.trunk}" stroke-width="10"/><line x1="45" y1="218" x2="45" y2="64" stroke="rgba(0,0,0,.22)" stroke-width="10" stroke-dasharray="2 5"/><path d="M45 64Q30 48 18 34M45 64Q60 46 72 32M45 64V30M32 48Q24 46 14 50M58 48Q66 44 76 48" stroke="${c.trunk}" stroke-width="5" fill="none" stroke-linecap="round"/>` + [[18, 30], [72, 28], [45, 24], [12, 48], [78, 46]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="11" ry="8" fill="${i % 2 ? c.l1 : c.l0}"/>`).join('')],
+  tree: (c, r) => [120, 150, `<path d="M56 150L58 80Q50 70 44 64M60 84Q70 70 78 66" stroke="${c.trunk}" stroke-width="8" fill="none" stroke-linecap="round"/>` + [[60, 46, 34, c.l0], [32, 64, 25, c.l1], [88, 62, 26, c.l1], [60, 72, 27, c.l0]].map(([x, y, rr, f]) => `<circle cx="${x}" cy="${y}" r="${rr}" fill="${f}"/>`).join('')
+    + (c.flower ? Array.from({ length: 9 }, () => `<circle cx="${18 + r() * 84}" cy="${26 + r() * 62}" r="3.6" fill="${c.flower[r() < .5 ? 0 : 1]}"/>`).join('') : '')],
+  bush: (c, r) => [80, 44, `<ellipse cx="40" cy="30" rx="36" ry="16" fill="${c.l0}"/><ellipse cx="28" cy="24" rx="18" ry="12" fill="${c.l1}"/>` + (c.flower ? Array.from({ length: 6 }, () => `<circle cx="${10 + r() * 60}" cy="${16 + r() * 22}" r="3.2" fill="${c.flower[r() < .5 ? 0 : 1]}"/>`).join('') : '')],
+  palm: c => [120, 180, `<path d="M58 180Q50 110 66 52" stroke="${c.trunk}" stroke-width="9" fill="none"/>` + [[-58, 30, -30, -14], [-46, -10, -24, -30], [-6, -42, -10, -34], [34, -30, 18, -38], [50, 18, 34, -20], [22, 40, 30, 0]].map(([ex, ey, cx, cy]) => frond(66, 52, 66 + ex, 52 + ey, 66 + cx, 52 + cy, c.l0, c.l1, 13)).join('')],
+  grass: c => [60, 30, [[8, 4], [18, 0], [28, 6], [36, 2], [46, 8], [54, 4]].map(([x, t], i) => `<path d="M${30 + (i - 2.5) * 3} 30Q${(x + 30) / 2} 16 ${x} ${t}" stroke="${c.grass || (i % 2 ? c.l1 : c.l0)}" stroke-width="3" fill="none" stroke-linecap="round"/>`).join('')],
+  pine: c => [70, 160, `<rect x="32" y="120" width="6" height="40" fill="${c.trunk}"/>` + [[0, 60, 30], [30, 52, 26], [56, 44, 22]].reverse().map(([y, h, w]) => `<path d="M35 ${y + 4}L${35 - w} ${y + h + 26}H${35 + w}Z" fill="${c.l0}"/><path d="M35 ${y + 4}L${35 - w * .45} ${y + 30}Q35 ${y + 24} ${35 + w * .45} ${y + 30}Z" fill="#fff"/>`).join('')],
+  rock: c => [80, 40, `<path d="M4 40L14 16L34 6L58 12L76 40Z" fill="${c.rock}"/><path d="M14 16L34 6L40 18L22 26Z" fill="rgba(255,255,255,.18)"/>`],
+  weed: c => [40, 140, [[12, c.l0, 0], [24, c.l1, 1], [32, c.l0, 2]].map(([x, f, k]) => `<path d="M${x} 140C${x - 10} 110 ${x + 10} 90 ${x} ${60 - k * 14}S${x + 8} ${30 - k * 8} ${x - 2} ${12 + k * 6}" stroke="${f}" stroke-width="6" fill="none" stroke-linecap="round"/>`).join('')],
+  coral: c => [80, 60, `<path d="M40 60V30M40 40L24 22M24 22V8M24 22L12 16M40 34L58 16M58 16V4M58 16L70 12M40 46L54 38" stroke="${c.coral}" stroke-width="7" fill="none" stroke-linecap="round"/>`],
+  volcano: c => [300, 110, `<path d="M0 110L118 22Q145 14 172 22L300 110Z" fill="${c.far}"/><path d="M118 22Q145 30 172 22" stroke="rgba(0,0,0,.15)" stroke-width="4" fill="none"/>` + [[150, 8, 10], [160, -6, 13], [148, -22, 15]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(110,100,95,.28)"/>`).join(''), -30],
+  mount: c => [400, 140, `<path d="M0 140L60 70L96 96L160 20L214 84L262 46L330 110L400 70V140Z" fill="${c.far}"/><path d="M160 20L144 40L166 36L178 42ZM262 46L250 60L270 58Z" fill="#fff" opacity=".85"/>`],
+  glacier: c => [400, 140, `<path d="M0 140L50 60L100 90L170 14L232 80L290 40L360 100L400 76V140Z" fill="#B9CCDC"/><path d="M50 60L36 84L64 78L78 90ZM170 14L148 46L180 40L196 50ZM290 40L274 62L300 58Z" fill="#fff"/>`]
+};
+const EXART = {
+  trilo: [100, 70, '<ellipse cx="50" cy="38" rx="44" ry="26" fill="#8A7660"/><path d="M8 34Q50 -6 92 34" fill="#9D8870"/>' + [0, 1, 2, 3, 4, 5].map(i => `<path d="M${30 + i * 10} 16V62" stroke="rgba(0,0,0,.25)" stroke-width="2"/>`).join('') + '<path d="M50 14V62" stroke="rgba(0,0,0,.3)" stroke-width="4"/><circle cx="22" cy="26" r="3" fill="#2B2340"/>'],
+  ammo: [100, 80, '<circle cx="58" cy="40" r="32" fill="#D8B888" stroke="#8A6A44" stroke-width="3"/><circle cx="62" cy="40" r="20" fill="none" stroke="#8A6A44" stroke-width="3"/><circle cx="64" cy="40" r="9" fill="none" stroke="#8A6A44" stroke-width="3"/>' + Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2; return `<line x1="${58 + Math.cos(a) * 22}" y1="${40 + Math.sin(a) * 22}" x2="${58 + Math.cos(a) * 31}" y2="${40 + Math.sin(a) * 31}" stroke="#A9895E" stroke-width="2"/>`; }).join('') + '<path d="M28 34Q14 30 4 36M28 40Q12 42 4 50M28 46Q16 54 10 62" stroke="#C99A8A" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="31" cy="36" r="3" fill="#2B2340"/>'],
+  dragon: [120, 60, '<ellipse cx="46" cy="20" rx="26" ry="8" transform="rotate(-12 46 20)" fill="rgba(225,240,255,.75)" stroke="#86A9C2" stroke-width="1.5"/><ellipse cx="46" cy="40" rx="26" ry="8" transform="rotate(12 46 40)" fill="rgba(225,240,255,.75)" stroke="#86A9C2" stroke-width="1.5"/><ellipse cx="66" cy="22" rx="22" ry="7" transform="rotate(-8 66 22)" fill="rgba(225,240,255,.7)" stroke="#86A9C2" stroke-width="1.5"/><ellipse cx="66" cy="38" rx="22" ry="7" transform="rotate(8 66 38)" fill="rgba(225,240,255,.7)" stroke="#86A9C2" stroke-width="1.5"/><line x1="24" y1="30" x2="114" y2="30" stroke="#3E6E8E" stroke-width="5" stroke-linecap="round"/><circle cx="20" cy="30" r="7" fill="#2F5A78"/>'],
+  milli: [160, 40, Array.from({ length: 14 }, (_, i) => `<line x1="${22 + i * 9.6}" y1="26" x2="${18 + i * 9.6}" y2="38" stroke="#4A3428" stroke-width="2"/><line x1="${24 + i * 9.6}" y1="26" x2="${28 + i * 9.6}" y2="38" stroke="#4A3428" stroke-width="2"/><ellipse cx="${24 + i * 9.6}" cy="${22 + Math.sin(i * .7) * 2}" rx="7" ry="9" fill="${i % 2 ? '#7A5640' : '#6B4A36'}"/>`).join('') + '<circle cx="12" cy="22" r="8" fill="#5A3E2E"/><path d="M6 16Q0 8 2 2M10 14Q8 6 12 0" stroke="#4A3428" stroke-width="2" fill="none"/>']
+};
+const tmName = E => T(E.name[0], E.name[1]);
+const tmMya = m => m >= 1 ? `${fmtN(m)} ${T('million years ago', 'millones de años atrás')}` : `${Math.round(m * 1000)} ${T('thousand years ago', 'mil años atrás')}`;
+const tmSpan = E => E.b >= 1 ? `${E.a}–${E.b} ${T('million years ago', 'millones de años atrás')}` : `${E.a} ${T('million', 'millones')} – ${Math.round(E.b * 1e6).toLocaleString(W.home() === 'es' ? 'es' : 'en')} ${T('years ago', 'años atrás')}`;
+const tmZone = (E, d) => E.s === 'sea' ? 'sea' : d.group === 'sea' || ['megalodon', 'dunkleosteus'].includes(d.id) ? 'sea' : d.group === 'fly' ? 'sky' : 'land';
+function tmCast(E) { // a balanced cast: swimmers, flyers and walkers, never more than 6 real animals
+  const pool = shuffle(D.filter(d => d.era === E.c)), by = z => pool.filter(d => tmZone(E, d) === z), out = [];
+  for (const z of ['sea', 'sky']) out.push(...by(z).slice(0, z === 'sea' ? 2 : 1));
+  out.push(...by('land').slice(0, 6 - out.length));
+  return out.slice(0, 6);
 }
-function travel() { const st = $('#tmStage'); W.sfx.whoosh(); W.tone(200, .8, 'sine', .15, 0, 1600); if (st) st.animate([{ filter: 'none', transform: 'none' }, { filter: 'blur(8px) hue-rotate(180deg) brightness(1.6)', transform: 'scale(1.1) rotate(2deg)' }, { filter: 'none', transform: 'none' }], { duration: 900 }); setTimeout(() => { if (W.cur === 'dino' && W.params.act === 'dinotime') { TM.scene.stop(); startTime(); } }, 450); }
+let tmRaf = 0;
+function tmStage(E, cast) { // build the diorama markup and the actor list
+  const C = TMP[E.s], r = tmRng(97 + TM_ERAS.indexOf(E) * 7919), HZ = 46, sea = E.s === 'sea', water = !sea && !!C.water_on, WT = 78;
+  const hill = (base, amp, f) => { let p = `M0 600V${base}`; const ph = r() * 6; for (let x = 0; x <= 1000; x += 40) p += `L${x} ${(base - amp * (.5 + .5 * Math.sin(x / 1000 * 6.283 * f + ph)) * (.6 + .4 * Math.sin(x / 170 + ph))).toFixed(1)}`; return p + 'V600Z'; };
+  let bg = `<svg class="tmBg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="tmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[0]}"/><stop offset="1" stop-color="${C.sky[1]}"/></linearGradient>`;
+  if (sea) bg += `<linearGradient id="tmFl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.floor[0]}"/><stop offset="1" stop-color="${C.floor[1]}"/></linearGradient></defs><rect width="1000" height="600" fill="url(#tmSky)"/>`
+    + [120, 380, 640, 860].map(x => `<path d="M${x} 0L${x + 70} 0L${x - 60} 600L${x - 170} 600Z" fill="#fff" opacity=".05"/>`).join('') + `<path d="${hill(520, 30, 2)}" fill="url(#tmFl)"/>`;
+  else {
+    bg += `<linearGradient id="tmGr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.ground[0]}"/><stop offset="1" stop-color="${C.ground[1]}"/></linearGradient>` + (water ? `<linearGradient id="tmWa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.water[0]}"/><stop offset="1" stop-color="${C.water[1]}"/></linearGradient>` : '') + `<linearGradient id="tmHz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.sky[1]}" stop-opacity="0"/><stop offset=".7" stop-color="${C.sky[1]}" stop-opacity=".55"/><stop offset="1" stop-color="${C.sky[1]}" stop-opacity="0"/></linearGradient></defs>`
+      + `<rect width="1000" height="600" fill="url(#tmSky)"/><path d="${hill(HZ * 6 - 4, 46, 1.6)}" fill="${C.far}"/><path d="${hill(HZ * 6 + 14, 20, 2.4)}" fill="${C.mid}"/><rect y="${HZ * 6 + 22}" width="1000" height="${600 - HZ * 6}" fill="url(#tmGr)"/><rect y="${HZ * 6 - 60}" width="1000" height="96" fill="url(#tmHz)"/>`;
+    if (water) bg += `<path d="M0 ${WT * 6 - 16}Q250 ${WT * 6 - 26} 500 ${WT * 6 - 16}T1000 ${WT * 6 - 16}V600H0Z" fill="${C.shore}"/><rect y="${WT * 6}" width="1000" height="${600 - WT * 6}" fill="url(#tmWa)"/><path d="M0 ${WT * 6 + 2}H1000" stroke="#fff" stroke-opacity=".45" stroke-width="3"/>`
+      + Array.from({ length: 7 }, () => { const x = r() * 900, y = WT * 6 + 20 + r() * 90; return `<path d="M${x} ${y}h${30 + r() * 50}" stroke="#fff" stroke-opacity=".22" stroke-width="3" stroke-linecap="round"/>`; }).join('');
+  }
+  bg += '</svg>';
+  const pl = (kind, x, y, w, z, anchorCenter) => { const [vw, vh, s, dy = 0] = PLANT[kind](C, r); return `<div class="tmPl" style="left:${x.toFixed(1)}%;${anchorCenter ? `top:${y}%` : `bottom:${(100 - y + dy / 10).toFixed(1)}%`};width:${w.toFixed(1)}%;z-index:${z}"><svg viewBox="0 0 ${vw} ${vh}">${s}</svg></div>`; };
+  const [back, front, clutter, far] = TM_PLANTS[E.s];
+  let deco = !sea && C.sun ? `<i class="tmSun" style="background:radial-gradient(circle,${C.sun} 0 45%,${C.sun}00 70%)"></i>` : '';
+  if (far) deco += pl(far, 18 + r() * 60, HZ + 1, far === 'volcano' ? 26 : 46, 1);
+  const nb = sea ? 7 : 9;
+  for (let i = 0; i < nb; i++) { const k = back[i % back.length], x = (i + .3 + r() * .5) / nb * 100; deco += sea ? pl(k, x, 88 + r() * 4, k === 'weed' ? 5 + r() * 3 : 7, 2) : pl(k, x, HZ + 3 + r() * 3, (k === 'rock' ? 4 : k === 'horse' ? 2.4 : k === 'fern' ? 6 : k === 'conifer' || k === 'club' || k === 'pine' || k === 'tfern' || k === 'palm' ? 5.5 : 7) * (.8 + r() * .5), 3); }
+  const ly1 = sea ? 96 : water ? WT - 3 : 92;
+  for (let i = 0; i < 5; i++) { const k = clutter[i % clutter.length], y = sea ? 90 + r() * 8 : HZ + 12 + r() * (ly1 - HZ - 12), x = 6 + r() * 88, sc = .6 + (y - HZ) / 50; deco += pl(k, x, y, (k === 'rock' ? 5 : k === 'horse' ? 2.6 : k === 'cycad' ? 8 : k === 'grass' ? 5 : 7) * sc, Math.round(y * 10)); }
+  deco += pl(front[0], -2 + r() * 4, 101, sea ? 9 : 17, 900) + pl(front[0], 98 + r() * 4, 101, sea ? 8 : 15, 900) + pl(front[1], 12 + r() * 6, 101, 10, 901);
+  if (water) deco += `<i class="tmWaterFront" style="top:${WT + 7}%;background:linear-gradient(${C.water[0]}00,${C.water[1]}aa)"></i>`;
+  if (sea) deco += Array.from({ length: 10 }, () => `<i class="tmBubble" style="left:${(r() * 100).toFixed(1)}%;animation-delay:-${(r() * 8).toFixed(1)}s;animation-duration:${(6 + r() * 6).toFixed(1)}s"></i>`).join('');
+  // actors: real animals first, then extras; each lives in its zone
+  const all = [...cast.map(d => ({ d, key: d.id, zone: tmZone(E, d), name: d.name, w: d.group === 'fly' ? 13 : clamp(8 + Math.log2(d.len + 1) * 5, 10, 30), face: 1 })),
+    ...E.ex.map(x => ({ x, key: x.id, zone: sea && x.z !== 'floor' ? 'sea' : x.z, name: T(x.n[0], x.n[1]), w: x.w, face: -1 }))];
+  for (const a of all) {
+    if (a.zone === 'sky') { a.y = 12 + r() * 20; a.s = 1; a.z = 960; }
+    else if (a.zone === 'sea' && sea) { a.y = 22 + r() * 56; a.s = .75 + r() * .3; a.z = 500 + Math.round(a.y); }
+    else if (a.zone === 'sea') { a.y = WT + 9 + r() * 7; a.s = .8; a.z = 820 + Math.round(a.y); }
+    else if (a.zone === 'floor') { a.y = 88 + r() * 8; a.s = 1; a.z = 880; }
+    else { a.y = HZ + 11 + r() * (ly1 - HZ - 11); a.s = .62 + (a.y - HZ) / (ly1 - HZ) * .5; a.z = Math.round(a.y * 10); }
+    a.px = 8 + r() * 84; a.v = (r() < .5 ? -1 : 1) * (a.zone === 'sky' ? 4 + r() * 3 : a.zone === 'floor' ? .8 : 1.2 + r() * 2.2); a.p = r() * 6;
+  }
+  return { bg, deco, all };
+}
+function startTime() {
+  const el = $('#s-dino'); el.style.overflowY = 'auto'; const E = TM_ERAS[TM.era], cast = tmCast(E), { bg, deco, all } = tmStage(E, cast);
+  const total = TM_ERAS[0].a, art = a => a.d ? svg(a.d) : a.x.art ? `<svg viewBox="0 0 ${EXART[a.x.art][0]} ${EXART[a.x.art][1]}">${EXART[a.x.art][2]}</svg>` : `<span class="emo">${a.x.e}</span>`;
+  const fact = (ic, k, lab) => `<li><button class="tmFact" data-f="${k}"><span class="emo">${ic}</span><span><b>${esc(lab)}</b>${esc(P(E[k]))}</span></button></li>`;
+  el.innerHTML = `<div class="tmWrap">
+    <div class="tmLine"><button class="tmNav" data-step="-1" aria-label="${esc(T('Back in time', 'Atrás en el tiempo'))}">◀</button>
+      <div class="tmTrack"><div class="tmBarS">${TM_ERAS.map((e, i) => `<button class="tmSeg ${i === TM.era ? 'on' : ''}" data-e="${i}" style="--c:${e.col};flex-grow:${e.a - e.b}" title="${esc(tmName(e))}"><span>${esc(tmName(e))}</span>${i === TM.era ? `<i class="tmHere" style="left:${((e.a - e.at) / (e.a - e.b) * 100).toFixed(1)}%"></i>` : ''}</button>`).join('')}</div>
+      <div class="tmScale"><span>${total} ${esc(T('million years ago', 'millones de años atrás'))}</span><span>${esc(T('drawn to scale', 'dibujado a escala'))}</span><span>${esc(T('today', 'hoy'))}</span></div></div>
+      <button class="tmNav" data-step="1" aria-label="${esc(T('Forward in time', 'Adelante en el tiempo'))}">▶</button></div>
+    <div class="tmStage" id="tmStage" style="--c:${E.col}">${bg}${deco}<div class="tmActors" id="tmA"></div><div class="tmSign"><b>${esc(tmName(E))}</b><small>${esc(tmMya(E.at))}</small></div></div>
+    <aside class="tmNotes"><p class="tmKick" style="--c:${E.col}">${esc(tmSpan(E))} · ${esc(T(`lasted ${fmtN(E.a - E.b)} million years`, `duró ${fmtN(E.a - E.b)} millones de años`))}</p><h3>${esc(P(E.nick))}</h3>
+      <ul class="tmFacts">${fact('🌍', 'land', T('Land', 'Tierra'))}${fact('🌡️', 'clim', T('Climate', 'Clima'))}${fact('🌿', 'plant', T('Plants', 'Plantas'))}${fact('🐾', 'life', T('Animals', 'Animales'))}${fact('⭐', 'event', T('Big moment', 'Gran momento'))}</ul>
+      <div class="tmWho"><b>${esc(T('Who lived here?', '¿Quién vivía aquí?'))}</b><span id="tmCount"></span></div>
+      <div class="tmRoster">${all.map(a => `<button class="tmChip" data-k="${a.key}">${art(a)}<span>${esc(a.name)}</span></button>`).join('')}</div></aside></div>`;
+  const box = $('#tmA'), stage = $('#tmStage');
+  const upd = () => { const n = all.filter(a => TM.seen.has(a.key)).length; $('#tmCount').textContent = `${n} / ${all.length}`; el.querySelectorAll('.tmChip').forEach(b => b.classList.toggle('got', TM.seen.has(b.dataset.k))); };
+  const meet = a => { W.react(a.n.firstElementChild, 'jump'); a.n.classList.remove('meet'); void a.n.offsetWidth; a.n.classList.add('meet');
+    if (a.d) { W.dinoRoar(a.d); found(a.d, true); sayP([`${a.d.name}!`, `¡${a.d.name}!`], a.d.fact); } else { W.sfx.pop && W.sfx.pop(); sayP(a.x.n, a.x.f); }
+    if (!TM.seen.has(a.key)) { TM.seen.add(a.key); W.award('science', 1, 'dinotime'); if (all.every(o => TM.seen.has(o.key))) setTimeout(() => { W.confetti(); }, 600); } upd(); };
+  for (const a of all) { const n = document.createElement('button'); n.className = 'tmDino z-' + a.zone; n.innerHTML = art(a); n.setAttribute('aria-label', a.name); n.style.width = (a.w * a.s * (innerWidth < 760 ? 1.3 : 1)) + '%'; n.style.zIndex = a.z; a.n = n; box.append(n); n.onclick = () => { a.v *= -1; meet(a); }; }
+  upd();
+  let last = 0; cancelAnimationFrame(tmRaf); const step = t => { if (!box.isConnected) return; const dt = Math.min(.05, (t - (last || t)) / 1000); last = t; const bw = box.clientWidth, bh = box.clientHeight;
+    for (const a of all) { a.px += a.v * dt * (a.zone === 'land' ? .6 + .4 * Math.sin(t / 1400 + a.p) : 1); if (a.px < 4) a.v = Math.abs(a.v); if (a.px > 96) a.v = -Math.abs(a.v);
+      const bob = a.zone === 'sky' ? Math.sin(t / 260 + a.p) * 1.6 : a.zone === 'sea' ? Math.sin(t / 700 + a.p) * 1.2 : 0;
+      a.n.style.transform = `translate(${(a.px * bw / 100).toFixed(1)}px, ${((a.y + bob) * bh / 100).toFixed(1)}px) scaleX(${(a.v < 0 ? -1 : 1) * a.face})`; }
+    tmRaf = requestAnimationFrame(step); }; tmRaf = requestAnimationFrame(step);
+  sayP(E.name, E.nick, [tmMya(E.at) + '.', tmMya(E.at) + '.']);
+  el.querySelector('.tmWrap').onclick = e => { const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.step) travel(clamp(TM.era + +b.dataset.step, 0, TM_ERAS.length - 1));
+    else if (b.dataset.e !== undefined) travel(+b.dataset.e);
+    else if (b.dataset.f) { W.sfx.boop && W.sfx.boop(); el.querySelectorAll('.tmFact').forEach(x => x.classList.toggle('on', x === b)); sayP(E[b.dataset.f]); }
+    else if (b.dataset.k) { const a = all.find(o => o.key === b.dataset.k); if (a) meet(a); } };
+  void stage;
+}
+function travel(to) {
+  if (to === TM.era) return; const st = $('#tmStage'), from = TM_ERAS[TM.era].at, dest = TM_ERAS[to].at; W.sfx.whoosh(); W.tone(to > TM.era ? 220 : 880, .9, 'sine', .12, 0, to > TM.era ? 900 : 220);
+  if (!st) { TM.era = to; return startTime(); }
+  const wp = document.createElement('div'); wp.className = 'tmWarp'; wp.innerHTML = '<b></b><small></small>'; st.append(wp); const t0 = performance.now(), D_ = 1000;
+  const tick = t => { const k = Math.min(1, (t - t0) / D_), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2, m = Math.exp(Math.log(from) + (Math.log(dest) - Math.log(from)) * e);
+    wp.firstChild.textContent = m >= 1 ? fmtN(Math.round(m)) : Math.round(m * 1000).toLocaleString(); wp.lastChild.textContent = m >= 1 ? T('million years ago', 'millones de años atrás') : T('thousand years ago', 'mil años atrás');
+    if (k < 1 && wp.isConnected) requestAnimationFrame(tick); else if (W.cur === 'dino' && W.params.act === 'dinotime') { TM.era = to; startTime(); } };
+  requestAnimationFrame(tick);
+}
 
 /* ---------- sticker book ---------- */
 function startStickers() {
